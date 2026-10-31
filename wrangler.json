@@ -1,8 +1,10 @@
 {
 	"name": "rights",
-	"compatibility_date": "2025-10-08",
+	"account_id": "e40783cbc98e269ecad290eac0daf4b6",
+	"compatibility_date": "2026-10-30",
 	"compatibility_flags": ["nodejs_compat"],
-	"main": "./dist/_worker.js/index.js",
+	"main": "@astrojs/cloudflare/entrypoints/server",
+	"routes": [{ "pattern": "rights.wtf", "custom_domain": true }],
 	"assets": {
 		"directory": "./dist",
 		"binding": "ASSETS"

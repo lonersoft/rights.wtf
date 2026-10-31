@@ -1,39 +1,53 @@
 {
-	"name": "rights",
-	"description": "Build a personal website, blog, or portfolio with Astro.",
-	"cloudflare": {
-		"label": "Astro Framework Starter",
-		"products": [
-			"Workers"
-		],
-		"categories": [],
-		"preview_icon_url": "https://imagedelivery.net/wSMYJvS3Xw-n339CbDyDIA/394ca3c9-d351-4036-035a-9f6dfa26dd00/public",
-		"preview_image_url": "https://imagedelivery.net/wSMYJvS3Xw-n339CbDyDIA/f40a6577-eed5-4f3e-cef4-b5ef0a1be100/preview",
-		"publish": true
-	},
-	"dependencies": {
-		"@astrojs/cloudflare": "12.6.12",
-		"@astrojs/mdx": "4.3.13",
-		"@astrojs/rss": "4.0.14",
-		"@astrojs/sitemap": "3.6.1",
-		"astro": "5.16.9",
-		"typescript": "5.9.3"
-	},
-	"devDependencies": {
-		"wrangler": "4.136.1"
-	},
-	"engines": {
-		"node": ">=22"
-	},
-	"private": true,
-	"scripts": {
-		"astro": "astro",
-		"build": "astro build",
-		"cf-typegen": "wrangler types",
-		"check": "astro build && tsc && wrangler deploy --dry-run",
-		"deploy": "wrangler deploy",
-		"dev": "astro dev",
-		"preview": "astro build && wrangler dev"
-	},
-	"type": "module"
+  "name": "rights.wtf",
+  "description": "Know your rights as a queer person, wherever you live.",
+  "keywords": [
+    "lgbtq",
+    "queer",
+    "rights",
+    "lgbt",
+    "legal",
+    "astro",
+    "cloudflare",
+    "workers"
+  ],
+  "license": "MIT",
+  "version": "1.0.0",
+  "homepage": "https://github.com/lonersoft/rights.wtf",
+  "bugs": {
+    "url": "https://github.com/lonersoft/rights.wtf/issues",
+    "email": "rights@lumis.moe"
+  },
+  "author": "Lolo280374 <lolo@loners.software> (https://lolodotzip.me)",
+  "contributors": [
+    "Lumi <hi@lumis.moe> (https://lumis.moe)"
+  ],
+  "funding": "https://hcb.hackclub.com/donations/start/lonersoft",
+  "repository": "github:lonersoft/rights.wtf",
+  "dependencies": {
+    "@astrojs/cloudflare": "14.4.3",
+    "@astrojs/mdx": "8.1.2",
+    "@astrojs/rss": "4.0.19",
+    "@astrojs/sitemap": "3.7.4",
+    "astro": "7.4.4",
+    "typescript": "7.0.2"
+  },
+  "devDependencies": {
+    "wrangler": "4.156.0"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "packageManager": "pnpm@12.16.1",
+  "private": true,
+  "scripts": {
+    "astro": "astro",
+    "build": "astro build",
+    "cf-typegen": "wrangler types",
+    "check": "astro build && tsc && wrangler deploy --dry-run",
+    "deploy": "wrangler deploy",
+    "dev": "astro dev",
+    "preview": "astro build && wrangler dev"
+  },
+  "type": "module"
 }
