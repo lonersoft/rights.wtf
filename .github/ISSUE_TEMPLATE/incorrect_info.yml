@@ -1,0 +1,61 @@
+name: ⚖️ Report incorrect or outdated information
+description: Flag inaccurate legal information, missing protections, or outdated country/region data.
+title: "[Correction]: "
+labels: ["data", "correction"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for helping keep rights.wtf accurate. Please provide reliable sources or citations (legislation, official government bodies, ILGA reports, or recognized NGOs) whenever possible.
+  - type: input
+    id: country
+    attributes:
+      label: Country / Territory / Region
+      placeholder: e.g., Germany, Poland, Florida (US)
+    validations:
+      required: true
+  - type: dropdown
+    id: topic
+    attributes:
+      label: Topic / Area of Law
+      options:
+        - Same-sex sexual acts / decriminalization
+        - Marriage / Civil unions / Partnerships
+        - Adoption / Parenting / Family rights
+        - Gender recognition / Name change / IDs
+        - Healthcare / Transition care / Banning conversion practices
+        - Anti-discrimination protections (employment, housing, hate crimes)
+        - Freedom of expression / Censorship ("propaganda" laws)
+        - Asylum / Refugee protections
+        - Emergency contacts / Organizations
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: current
+    attributes:
+      label: What is currently stated?
+      description: What does rights.wtf currently say that is incorrect or missing?
+      placeholder: Cite the page or quote the text.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What should it say instead?
+      description: The accurate, up-to-date legal status or situation.
+    validations:
+      required: true
+  - type: textarea
+    id: sources
+    attributes:
+      label: Sources & Citations
+      description: Links to laws, official gazettes, court rulings, or authoritative NGO reports (e.g. ILGA, TGEU, Human Rights Watch).
+      placeholder: https://...
+    validations:
+      required: true
+  - type: textarea
+    id: extra
+    attributes:
+      label: Additional Context
+      description: Any nuances, local enforcement reality, pending legislation, or context.

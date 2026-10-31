@@ -1,0 +1,156 @@
+name: Activity Notifications (Discord & Free SMS)
+
+on:
+  issues:
+    types: [opened]
+  pull_request:
+    types: [opened]
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Notification
+        uses: actions/github-script@v7
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          FREE_SMS_USER: ${{ secrets.FREE_SMS_USER }}
+          FREE_SMS_PASS: ${{ secrets.FREE_SMS_PASS }}
+        with:
+          script: |
+            const isPR = context.eventName === 'pull_request';
+            const item = isPR ? context.payload.pull_request : context.payload.issue;
+
+            const labels = (item.labels || []).map(l => `\`${l.name}\``).join(' ') || '`none`';
+            const labelNames = (item.labels || []).map(l => l.name.toLowerCase());
+            const isCorrection = labelNames.some(l => l.includes('correction') || l.includes('data'));
+            const isBug = labelNames.some(l => l.includes('bug'));
+
+            let typeLabel = 'Issue';
+            let prefixIcon = '📝';
+            let color = 5793266; // #5865F2 Blurple
+
+            if (isPR) {
+              typeLabel = 'PR';
+              prefixIcon = '🔀';
+              color = 10181046; // #9B59B6 Purple
+            } else if (isCorrection) {
+              typeLabel = 'Correction';
+              prefixIcon = '⚖️';
+              color = 15158332; // #E74C3C Red
+            } else if (isBug) {
+              typeLabel = 'Bug';
+              prefixIcon = '🐛';
+              color = 15105570; // #E67E22 Orange
+            }
+
+            // Excerpt description (up to 300 chars)
+            let snippet = (item.body || '').replace(/\r/g, '').trim();
+            if (snippet.length > 300) {
+              snippet = snippet.substring(0, 300) + '...';
+            }
+            if (snippet.length > 0) {
+              snippet = '> ' + snippet.split('\n').slice(0, 4).join('\n> ');
+            }
+
+            // 1. Discord Webhook Notification (Components V2)
+            let webhookUrl = process.env.DISCORD_WEBHOOK_URL;
+            if (webhookUrl) {
+              try {
+                const urlObj = new URL(webhookUrl);
+                urlObj.searchParams.set('with_components', 'true');
+                webhookUrl = urlObj.toString();
+
+                const buttonLabel = isPR ? 'View Pull Request on GitHub' : 'View Issue on GitHub';
+
+                const discordPayload = {
+                  flags: 32768, // IS_COMPONENTS_V2
+                  components: [
+                    {
+                      type: 17, // Container
+                      accent_color: color,
+                      components: [
+                        {
+                          type: 9, // Section
+                          components: [
+                            {
+                              type: 10, // TextDisplay
+                              content: `### ${prefixIcon} ${typeLabel} #${item.number}: ${item.title}\nOpened by **@${item.user.login}**`,
+                            },
+                          ],
+                          accessory: {
+                            type: 11, // Thumbnail
+                            media: {
+                              url: item.user.avatar_url,
+                            },
+                          },
+                        },
+                        {
+                          type: 14, // Separator
+                          spacing: 1,
+                          divider: true,
+                        },
+                        {
+                          type: 10, // TextDisplay
+                          content: (snippet ? `${snippet}\n\n` : '') + `**Labels:** ${labels}`,
+                        },
+                        {
+                          type: 14, // Separator
+                          spacing: 1,
+                          divider: false,
+                        },
+                        {
+                          type: 1, // ActionRow
+                          components: [
+                            {
+                              type: 2, // Button
+                              style: 5, // Link
+                              label: buttonLabel,
+                              url: item.html_url,
+                            },
+                            {
+                              type: 2, // Button
+                              style: 5, // Link
+                              label: 'Author Profile',
+                              url: item.user.html_url,
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                  ],
+                };
+
+                const res = await fetch(webhookUrl, {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify(discordPayload),
+                });
+
+                if (!res.ok) {
+                  console.error('Discord webhook error:', res.status, await res.text());
+                }
+              } catch (err) {
+                console.error('Failed to send Discord webhook:', err);
+              }
+            }
+
+            // 2. Free Mobile SMS Notification
+            const freeUser = process.env.FREE_SMS_USER;
+            const freePass = process.env.FREE_SMS_PASS;
+            if (freeUser && freePass) {
+              try {
+                const smsMsg = `rights.wtf [${typeLabel}] #${item.number}: ${item.title}\n${item.html_url}`;
+                const res = await fetch('https://smsapi.free-mobile.fr/sendmsg', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ user: freeUser, pass: freePass, msg: smsMsg }),
+                });
+
+                if (!res.ok) {
+                  console.error('Free SMS API error:', res.status, await res.text());
+                }
+              } catch (err) {
+                console.error('Failed to send Free SMS:', err);
+              }
+            }

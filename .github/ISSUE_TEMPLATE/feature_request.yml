@@ -1,0 +1,29 @@
+name: 💡 Feature suggestion
+description: Propose an idea, new country coverage, tool, or improvement for rights.wtf.
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem would this solve?
+      description: A clear description of the need or user experience problem.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution or idea
+      description: What should rights.wtf do, add, or change?
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Any other approaches, existing tools, or workarounds you've thought about.
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional context
+      description: Mockups, references to other sites, or anything else relevant.

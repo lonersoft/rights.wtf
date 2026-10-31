@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: 💬 General discussion / Questions
+    url: https://github.com/lonersoft/rights.wtf/discussions
+    about: Ask questions or discuss ideas that are not specific bugs or factual corrections.

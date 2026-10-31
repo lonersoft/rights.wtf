@@ -1,0 +1,60 @@
+name: Issue Triage & Auto-labeling
+
+on:
+  issues:
+    types: [opened, edited]
+
+permissions:
+  issues: write
+
+jobs:
+  triage:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Parse issue form and apply labels
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const body = context.payload.issue.body || '';
+            const labelsToAdd = new Set();
+
+            // Extract Country / Territory / Region
+            const countryMatch = body.match(/### Country \/ Territory \/ Region\s*\n+([^\n\r]+)/i);
+            if (countryMatch && countryMatch[1]) {
+              const rawCountry = countryMatch[1].trim();
+              if (rawCountry && !rawCountry.startsWith('_No response_')) {
+                // Normalize e.g. "Germany", "Poland", "Florida (US)"
+                const sanitizedCountry = rawCountry.replace(/[^a-zA-Z0-9\s\-_()]/g, '').trim();
+                if (sanitizedCountry.length > 0 && sanitizedCountry.length <= 40) {
+                  labelsToAdd.add(`country: ${sanitizedCountry.toLowerCase()}`);
+                }
+              }
+            }
+
+            // Extract Topic / Area of Law
+            const topicMatch = body.match(/### Topic \/ Area of Law\s*\n+([^\n\r]+)/i);
+            if (topicMatch && topicMatch[1]) {
+              const rawTopic = topicMatch[1].trim();
+              if (rawTopic && !rawTopic.startsWith('_No response_')) {
+                const topicSlug = rawTopic
+                  .split('/')[0]
+                  .trim()
+                  .toLowerCase()
+                  .replace(/[^a-z0-9\s-]/g, '')
+                  .replace(/\s+/g, '-');
+                if (topicSlug.length > 0) {
+                  labelsToAdd.add(`topic: ${topicSlug}`);
+                }
+              }
+            }
+
+            if (labelsToAdd.size > 0) {
+              const labels = Array.from(labelsToAdd);
+              console.log('Adding labels:', labels);
+              await github.rest.issues.addLabels({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.payload.issue.number,
+                labels: labels,
+              });
+            }
