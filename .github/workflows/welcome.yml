@@ -34,36 +34,31 @@ jobs:
             let commentBody = '';
 
             if (isPR) {
-              commentBody = `👋 Hi @${author}! Thank you for opening your first pull request on **rights.wtf**!
-
-### 🧭 What happens next?
-1. **Sources & Verification**: If this PR updates country legal data or rights status, please make sure official laws, court rulings, or authoritative NGO reports (e.g. ILGA, TGEU, HRW) are cited in your commit or description.
-2. **Review**: A maintainer will review your changes and test the build shortly.
-3. **Merge**: Once approved, your changes will deploy automatically to [rights.wtf](https://rights.wtf).
-
-Thank you for helping queer people around the world know their rights! 🏳️‍🌈`;
+              commentBody = [
+                `👋 Hi @${author}! Thank you for opening your first pull request on **rights.wtf**!`,
+                '',
+                '### 🧭 What happens next?',
+                '1. **Sources & Verification**: If this PR updates country legal data or rights status, please make sure official laws, court rulings, or authoritative NGO reports (e.g. ILGA, TGEU, HRW) are cited in your commit or description.',
+                '2. **Review**: A maintainer will review your changes and test the build shortly.',
+                '3. **Merge**: Once approved, your changes will deploy automatically to [rights.wtf](https://rights.wtf).',
+                '',
+                'Thank you for helping queer people around the world know their rights! 🏳️‍🌈'
+              ].join('\n');
             } else {
-              commentBody = `👋 Hi @${author}! Thank you for opening your first issue on **rights.wtf**!
-
-### 🧭 What happens next?
-- **⚖️ Legal & factual corrections**: We review reports against official legislation, national gazettes, and recognized human rights monitors. If you have links or citations, please make sure they're included in the description above!
-- **🐛 Bug reports & features**: A maintainer will review this shortly and follow up if we need extra reproduction details.
-
-Thanks for helping keep **rights.wtf** accurate and reliable!`;
+              commentBody = [
+                `👋 Hi @${author}! Thank you for opening your first issue on **rights.wtf**!`,
+                '',
+                '### 🧭 What happens next?',
+                "- **⚖️ Legal & factual corrections**: We review reports against official legislation, national gazettes, and recognized human rights monitors. If you have links or citations, please make sure they're included in the description above!",
+                "- **🐛 Bug reports & features**: A maintainer will review this shortly and follow up if we need extra reproduction details.",
+                '',
+                'Thanks for helping keep **rights.wtf** accurate and reliable!'
+              ].join('\n');
             }
 
-            if (isPR) {
-              await github.rest.issues.createComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: item.number,
-                body: commentBody,
-              });
-            } else {
-              await github.rest.issues.createComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: item.number,
-                body: commentBody,
-              });
-            }
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: item.number,
+              body: commentBody,
+            });
