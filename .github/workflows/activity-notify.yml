@@ -44,14 +44,19 @@ jobs:
               color = 15105570; // #E67E22 Orange
             }
 
-            // Excerpt description (up to 300 chars)
-            let snippet = (item.body || '').replace(/\r/g, '').trim();
-            if (snippet.length > 300) {
-              snippet = snippet.substring(0, 300) + '...';
+            // Sanitize untrusted text for Discord (strip markdown, control chars, limit length)
+            function sanitize(text, maxLen = 200) {
+              if (!text) return '';
+              return text
+                .replace(/[\u0000-\u001f\u007f-\u009f]/g, '')
+                .replace(/[\\*_~`|>#\[\]()]/g, '')
+                .trim()
+                .slice(0, maxLen);
             }
-            if (snippet.length > 0) {
-              snippet = '> ' + snippet.split('\n').slice(0, 4).join('\n> ');
-            }
+
+            const safeTitle = sanitize(item.title, 120);
+            const safeBody = sanitize(item.body, 200);
+            const snippet = safeBody ? `> ${safeBody}` : '';
 
             // 1. Discord Webhook Notification (Components V2)
             let webhookUrl = process.env.DISCORD_WEBHOOK_URL;
@@ -75,7 +80,7 @@ jobs:
                           components: [
                             {
                               type: 10, // TextDisplay
-                              content: `### ${prefixIcon} ${typeLabel} #${item.number}: ${item.title}\nOpened by **@${item.user.login}**`,
+                              content: `### ${prefixIcon} ${typeLabel} #${item.number}: ${safeTitle}\nOpened by **@${item.user.login}**`,
                             },
                           ],
                           accessory: {

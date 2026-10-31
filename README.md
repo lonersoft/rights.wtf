@@ -49,6 +49,11 @@ Notice something wrong or outdated for your country? We need your help keeping t
 1. **Report a legal correction:** Use our [⚖️ Issue Template](https://github.com/lonersoft/rights.wtf/issues/new/choose) and fill it out properly, it will be sent to one of the maintainers [lolodotzip](https://lolodotzip.me).
 2. **Submit a Pull Request:** All PRs updating legal information must include direct links to official legislation or reputable NGO sources.
 
+The longer version lives in [CONTRIBUTING.md](CONTRIBUTING.md) (source rules, setup, house style).
+Behaviour in issues and PRs is covered by our [Code of Conduct](CODE_OF_CONDUCT.md) — this project is
+about queer people's safety, not open debate about whether they exist. Found something exploitable in
+the site or the deploy pipeline? Read [SECURITY.md](SECURITY.md) and email us instead of opening an issue.
+
 ## Tech Stack
 
 <img src="https://www.shieldcn.dev/badge/Language-TypeScript-3178C6.svg?logo=typescript&variant=branded&size=sm" alt="Language · TypeScript" /> <img src="https://www.shieldcn.dev/badge/Framework-Astro-BC52EE.svg?logo=astro&variant=branded&size=sm" alt="Framework · Astro" /> <img src="https://www.shieldcn.dev/badge/Stack-Tailwind_CSS-06B6D4.svg?logo=tailwindcss&variant=branded&size=sm" alt="Tailwind CSS" /> <img src="https://www.shieldcn.dev/badge/Stack-Cloudflare_Workers-F38020.svg?logo=cloudflare&variant=branded&size=sm" alt="Cloudflare Workers" /> <img src="https://www.shieldcn.dev/badge/Package_mgr-pnpm-F69220.svg?logo=pnpm&variant=branded&size=sm" alt="Package mgr · pnpm" /> <img src="https://www.shieldcn.dev/badge/ESM-only-16a34a.svg?variant=secondary&size=sm" alt="ESM only" />
