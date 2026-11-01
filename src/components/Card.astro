@@ -1,0 +1,34 @@
+---
+import type { HTMLAttributes } from "astro/types";
+
+type Props = HTMLAttributes<"div"> & {
+	as?: "div" | "section" | "article";
+	padding?: "none" | "sm" | "md" | "lg";
+	/** Adds the hover border used by clickable/list cards. */
+	interactive?: boolean;
+};
+
+const {
+	as: Tag = "div",
+	padding = "md",
+	interactive = false,
+	class: className,
+	...rest
+} = Astro.props;
+
+const PADDING = {
+	none: "",
+	sm: "p-4",
+	md: "p-6",
+	lg: "p-6 sm:p-8",
+} as const;
+
+const classes = [
+	"rounded-2xl border border-line bg-surface",
+	PADDING[padding],
+	interactive ? "transition-colors hover:border-line-strong" : "",
+	className,
+];
+---
+
+<Tag class:list={classes} {...rest}><slot /></Tag>

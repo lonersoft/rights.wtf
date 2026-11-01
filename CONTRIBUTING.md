@@ -39,20 +39,27 @@ useful sentence. A confident wrong one is not.
 
 ## Contributing information
 
-Open
-[an issue with the correction form](https://github.com/lonersoft/rights.wtf/issues/new?template=incorrect_info.yml)
-and tell us: country/region, topic, what we currently say, what is actually true, and the sources.
-We verify and write the change ourselves — no git required.
+There are two ways to contribute legal information:
 
-If you want to do the edit yourself:
+### 1. The web contribution form (recommended)
 
-- Country and topic data will live in content collections / data files under `src/`, one file per
-  country or region. **This does not exist yet** — the content model is still being designed, so ask
-  in a discussion before writing a parser, and send data through the correction form meanwhile.
-- Put the citation next to the claim it supports, not in a bibliography at the bottom. People
-  need to be able to check us without leaving the sentence.
-- Also send us the helpline's own site, not just a directory listing. Numbers get disconnected.
-- Run the build before opening the PR (`pnpm check`) so we aren't fixing it for you.
+Go to **[rights.wtf/contribute](https://rights.wtf/contribute)** and select the jurisdiction.
+The form validates your claims against the real schema live in the browser, previews the exact
+JSON, and opens a pull request for human review. No git, no hand-editing JSON braces, and no
+GitHub account required.
+
+### 2. Issue template or manual PR
+
+If you prefer plain text or have a broad question, open
+[an issue with the correction form](https://github.com/lonersoft/rights.wtf/issues/new?template=incorrect_info.yml).
+We verify and write the change ourselves.
+
+If you are editing the JSON directly:
+
+- Country and topic data lives in `src/content/jurisdictions/<code >.json`.
+- Put the citation directly under the topic it supports.
+- Run `pnpm check` and `node scripts/check-sources.mjs` before opening the PR.
+- The build will reject any topic that is not `unknown` if it has zero sources.
 
 Then open a PR and tick the checklist in the template. Data-only PRs get reviewed fastest when the
 sources are in the description, not only in the diff.

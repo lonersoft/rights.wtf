@@ -1,17 +1,64 @@
 ---
 // Basics Layout + Tailwind utilities kept available for future styling.
 import '../styles/global.css';
+
+interface Props {
+	title?: string;
+	description?: string;
+	image?: string;
+}
+
+const {
+	title = 'rights.wtf',
+	description = 'A plain-language field guide for queer people navigating laws, healthcare, and community around the world.',
+	image = '/og/default.svg',
+} = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site || 'https://rights.wtf');
+const imageURL = new URL(image, Astro.site || 'https://rights.wtf');
 ---
 
 <!doctype html>
 <html lang="en">
 	<head>
+		<script is:inline>
+			// Set the theme before first paint. Inline and blocking on purpose:
+			// anything async here means a white flash for someone opening this at 2am.
+			(() => {
+				try {
+					const stored = localStorage.getItem('theme');
+					const dark = stored
+						? stored === 'dark'
+						: window.matchMedia('(prefers-color-scheme: dark)').matches;
+					document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+				} catch {
+					document.documentElement.dataset.theme = 'light';
+				}
+			})();
+		</script>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="icon" href="/favicon.ico" />
 		<meta name="generator" content={Astro.generator} />
-		<title>rights.wtf</title>
+		<meta name="description" content={description} />
+		<link rel="canonical" href={canonicalURL} />
+		<title>{title}</title>
+
+		<!-- OpenGraph / Facebook / Messaging -->
+		<meta property="og:type" content="website" />
+		<meta property="og:site_name" content="rights.wtf" />
+		<meta property="og:url" content={canonicalURL} />
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={description} />
+		<meta property="og:image" content={imageURL} />
+
+		<!-- Twitter / X -->
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:url" content={canonicalURL} />
+		<meta name="twitter:title" content={title} />
+		<meta name="twitter:description" content={description} />
+		<meta name="twitter:image" content={imageURL} />
 	</head>
 	<body>
 		<slot />
@@ -23,6 +70,6 @@ import '../styles/global.css';
 	body {
 		margin: 0;
 		width: 100%;
-		height: 100%;
+		min-height: 100%;
 	}
 </style>

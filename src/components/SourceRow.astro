@@ -1,0 +1,60 @@
+---
+/**
+ * One source row inside the contribute form.
+ *
+ * Used twice: server-rendered for sources that already exist, and cloned from a
+ * <template> for new ones. Living in one component is what keeps those two
+ * paths from drifting.
+ */
+import { FIELD_CLASS } from "../lib/ui";
+import { sourceKinds } from "../lib/schema";
+
+interface Props {
+	label?: string;
+	url?: string;
+	kind?: string;
+}
+
+const { label = "", url = "", kind = "primary-law" } = Astro.props;
+
+const KIND_LABELS: Record<string, string> = {
+	"primary-law": "the law itself",
+	"court-ruling": "court ruling",
+	government: "government page",
+	monitor: "rights monitor",
+	"local-org": "local org",
+};
+---
+
+<div class="grid gap-2 sm:grid-cols-[1fr_1.5fr_auto_auto]" data-source>
+	<input
+		data-source-field="label"
+		value={label}
+		placeholder="what this is"
+		aria-label="source description"
+		class:list={[FIELD_CLASS, "py-2 text-xs"]}
+	/>
+	<input
+		data-source-field="url"
+		type="url"
+		value={url}
+		placeholder="https://…"
+		aria-label="source URL"
+		class:list={[FIELD_CLASS, "py-2 text-xs"]}
+	/>
+	<select
+		data-source-field="kind"
+		aria-label="source type"
+		class:list={[FIELD_CLASS, "cursor-pointer py-2 text-xs"]}
+	>
+		{sourceKinds.map((k) => <option value={k} selected={k === kind}>{KIND_LABELS[k]}</option>)}
+	</select>
+	<button
+		type="button"
+		data-remove-source
+		aria-label="remove this source"
+		class="rounded-lg border border-line px-2.5 text-xs text-ink-faint transition-colors hover:border-bad-line hover:text-bad"
+	>
+		×
+	</button>
+</div>

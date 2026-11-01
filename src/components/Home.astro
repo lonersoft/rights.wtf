@@ -1,668 +1,245 @@
 ---
+import Page from "./Page.astro";
+import Card from "./Card.astro";
+import Badge from "./Badge.astro";
+import Button from "./Button.astro";
+import Select from "./Select.astro";
+import HelplineCard from "./HelplineCard.astro";
+import Footer from "./Footer.astro";
+import { getCollection } from "astro:content";
+import { coverageOf } from "../lib/jurisdictions";
+import { COVERAGE, coverageBadgeClass } from "../lib/status";
+import { FEATURED_HELPLINES } from "../lib/helplines";
+
 // rights.wtf - Homepage
-// Built from user wireframe, refined with unslop, design-taste-frontend, and ui-ux-pro-max
+
+const entries = (await getCollection("jurisdictions"))
+	.filter((e) => coverageOf(e.data) !== "stub")
+	.sort((a, b) => a.data.name.localeCompare(b.data.name));
+
+const countries = entries.filter((e) => !e.data.parent);
+const regions = entries.filter((e) => e.data.parent);
+
+const topicOrder = ["decriminalization", "marriage", "genderRecognition", "conversionTherapy"] as const;
+
+const preview = entries.map((e) => ({
+	code: e.data.code,
+	name: e.data.name,
+	coverage: coverageOf(e.data),
+	topics: topicOrder.map((k) => ({
+		key: k,
+		status: e.data.topics[k].status,
+		summary: e.data.topics[k].summary,
+	})),
+}));
+
+const first = preview.find((p) => p.code === countries[0]?.data.code) ?? preview[0];
+const json = JSON.stringify(preview).replace(/</g, "\\u003c");
+
+const helplines = FEATURED_HELPLINES;
 ---
 
-<div class="relative min-h-[100dvh] bg-white text-zinc-900 selection:bg-pink-100 selection:text-pink-900 flex flex-col justify-between overflow-x-hidden">
-	{/* Soft warm pink ambient wash */}
-	<div class="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_80%_50%_at_50%_0%,#fff1f5,rgba(255,255,255,0))]"></div> {/* taste-skill-ignore: user requested white-pink background gradient */}
+<Page width="6xl">
+	<Fragment slot="wash">
+		<div class="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_80%_50%_at_50%_0%,var(--wash),transparent)]"></div>
+	</Fragment>
 
-	{/* Safety Quick-Exit Alert (one-time dismissible banner) */}
-	<div
-		id="quick-exit-alert"
-		data-ui
-		class="hidden w-full bg-rose-50 text-rose-950 px-4 py-2 text-xs border-b border-rose-200/80" data-ui
-		role="region"
-		aria-label="Safety exit notification"
-	>
-		<div class="mx-auto flex max-w-6xl items-center justify-between gap-3">
-			<div class="flex items-center gap-2">
-				<svg class="h-4 w-4 text-rose-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
-					<path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-				</svg>
-				<span>
-					<strong class="font-semibold text-rose-900">need to leave fast?</strong> hit <kbd class="rounded bg-white px-1.5 py-0.5 font-sans font-semibold text-rose-900 border border-rose-300">Esc (escape)</kbd> 3 times to instantly close this site and open Google.
-				</span>
-			</div>
-			<div class="flex items-center gap-3 shrink-0">
-				<a
-					href="https://www.google.com"
-					class="font-bold text-rose-700 underline hover:text-rose-900 transition-colors"
-					title="Exit immediately to Google"
-				>
-					quick exit now
-				</a>
-				<button
-					id="dismiss-exit-alert"
-					type="button"
-					class="rounded-md px-2 py-0.5 font-semibold text-rose-700 hover:bg-rose-100 transition-colors cursor-pointer"
-					aria-label="Dismiss quick exit notice"
-				>
-					got it!
-				</button>
-			</div>
-		</div>
+	{/* Hero */}
+	<div class="mx-auto mb-10 max-w-3xl text-center sm:mb-12">
+		<h1 class="text-3xl font-extrabold leading-tight tracking-tight text-ink sm:text-5xl">
+			no but actually, what <span class="font-black text-accent underline decoration-accent decoration-wavy decoration-2">THE FUCK</span> are rights?
+		</h1>
+		<p class="mt-4 text-base leading-relaxed text-ink-muted sm:text-lg">
+			well, welcome to your first steps. welcome to the club! <span class="block font-normal text-ink-faint sm:inline">(and welcome if you're also not queer)</span>
+		</p>
 	</div>
 
-	{/* 1. Header */}
-	<header class="w-full bg-white/90 backdrop-blur-md sticky top-0 z-30 border-b border-pink-100/70" data-ui>
-		<div class="flex h-16 sm:h-20 w-full items-center justify-between px-4 sm:px-8">
-			{/* Left: Brand logo + name */}
-			<a
-				href="/"
-				class="flex items-center gap-2.5 rounded-lg text-zinc-900 no-underline transition-opacity hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-500"
-				aria-label="rights.wtf home"
-			>
-				<div class="flex h-9 w-9 items-center justify-center rounded-xl bg-pink-500 text-white font-bold shadow-sm shadow-pink-500/25">
-					<svg class="h-4 w-4 fill-current" viewBox="0 0 24 24" aria-hidden="true">
-						<path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+	{/* Three cards */}
+	<div class="mb-10 grid grid-cols-1 gap-6 md:grid-cols-3">
+		{/* Card 1: country quick-sheet */}
+		<Card id="directory" class="flex scroll-mt-24 flex-col justify-between" interactive>
+			<div>
+				<div class="mb-2 flex items-center gap-2">
+					<svg class="h-5 w-5 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+						<path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
 					</svg>
+					<h2 class="text-lg font-bold text-ink">quick! give me informations!!</h2>
 				</div>
-				<span class="text-xl font-bold tracking-tight text-zinc-900">
-					rights<span class="text-pink-600">.wtf</span>
-				</span>
-			</a>
+				<p class="mb-4 text-xs leading-relaxed text-ink-muted">
+					Find your legal protections, transition rules, and safety reality right where you live.
+				</p>
 
-			{/* Right: Direct navigation links + GitHub + Pill CTA */}
-			<div class="flex items-center gap-4 sm:gap-6">
-				{/* Desktop direct links */}
-				<nav class="hidden md:flex items-center gap-6 text-[17px] font-medium text-zinc-800" aria-label="Main navigation">
-					<a href="#helplines" class="transition-opacity hover:opacity-60">helplines</a>
-					<a href="#directory" class="transition-opacity hover:opacity-60">country info</a>
-					<a href="#guide" class="transition-opacity hover:opacity-60">guide</a>
-					<a href="#about" class="transition-opacity hover:opacity-60">about</a>
-				</nav>
+				<Select id="country-selector" label="Select your country or region:">
+					<optgroup label="Countries">
+						{countries.map((e) => (
+							<option value={e.data.code} selected={e === countries[0]}>{e.data.name}</option>
+						))}
+					</optgroup>
+					{regions.length > 0 && (
+						<optgroup label="US states & regions (laws vary wildly)">
+							{regions.map((e) => (
+								<option value={e.data.code}>{e.data.name}</option>
+							))}
+						</optgroup>
+					)}
+				</Select>
 
-				{/* GitHub source */}
-				<a
-					href="https://github.com/lonersoft/rights.wtf"
-					target="_blank"
-					rel="noopener noreferrer"
-					class="hidden sm:flex h-9 w-9 items-center justify-center rounded-full text-zinc-700 transition-opacity hover:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-500"
-					aria-label="View source code on GitHub"
-				>
-					<svg class="h-5 w-5 fill-current" viewBox="0 0 24 24" aria-hidden="true">
-						<path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
-					</svg>
-				</a>
-
-				{/* la bouton */}
-				<a
-					href="https://hcb.hackclub.com/donations/start/lonersoft"
-					target="_blank"
-					rel="noopener noreferrer"
-					class="flex h-10 items-center justify-center rounded-full bg-zinc-900 px-5 text-sm font-semibold text-white shadow-sm transition-colors duration-200 hover:bg-pink-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-500 whitespace-nowrap"
-					aria-label="Donate to Loners can Make Software"
-				>
-					donate
-				</a>
-
-				{/* Mobile menu trigger */}
-				<button
-					id="mobile-nav-toggle"
-					type="button"
-					class="md:hidden flex h-10 w-10 flex-col items-center justify-center gap-1.5 rounded-lg text-zinc-800 transition-colors hover:bg-pink-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-500 cursor-pointer"
-					aria-expanded="false"
-					aria-controls="mobile-nav-menu"
-					aria-label="Toggle navigation menu"
-				>
-					<span class="h-0.5 w-5 rounded-full bg-current transition-all"></span>
-					<span class="h-0.5 w-5 rounded-full bg-current transition-all"></span>
-					<span class="h-0.5 w-5 rounded-full bg-current transition-all"></span>
-				</button>
-			</div>
-		</div>
-
-		{/* Mobile dropdown drawer */}
-		<div
-			id="mobile-nav-menu"
-			class="hidden border-t border-pink-100 bg-white/95 px-6 py-5 backdrop-blur-md md:hidden"
-			role="menu"
-		>
-			<div class="flex flex-col gap-3 text-base font-medium text-zinc-800">
-				<a href="#helplines" class="mobile-nav-link py-1 hover:text-pink-600 transition-colors" role="menuitem">helplines</a>
-				<a href="#directory" class="mobile-nav-link py-1 hover:text-pink-600 transition-colors" role="menuitem">country info</a>
-				<a href="#guide" class="mobile-nav-link py-1 hover:text-pink-600 transition-colors" role="menuitem">guide</a>
-				<a href="#about" class="mobile-nav-link py-1 hover:text-pink-600 transition-colors" role="menuitem">about</a>
-				<div class="mt-2 pt-3 border-t border-pink-100 flex items-center justify-between">
+				{/* Dynamic legal quick-sheet snippet */}
+				<div id="quick-info-box" class="mt-4 space-y-2 rounded-xl border border-line bg-accent-soft/40 p-3.5 text-xs">
+					<div class="flex items-center justify-between gap-2 pb-1.5">
+						<span class="font-bold text-ink" id="info-country-name">{first?.name ?? "—"}</span>
+						<span class={coverageBadgeClass(first?.coverage ?? "stub")} id="info-status-badge">
+							{first ? COVERAGE[first.coverage].short : "not verified"}
+						</span>
+					</div>
+					<div class="space-y-1.5 text-ink-muted" id="info-rows"></div>
 					<a
-						href="https://github.com/lonersoft/rights.wtf"
-						target="_blank"
-						rel="noopener noreferrer"
-						class="text-sm font-medium text-zinc-600 hover:text-zinc-950 flex items-center gap-1.5"
+						id="info-full-link"
+						href={first ? `/country/${first.code}` : "/countries"}
+						class="mt-1 inline-flex items-center gap-1 font-bold text-accent hover:text-accent-strong hover:underline"
 					>
-						GitHub source &rarr;
-					</a>
-				</div>
-			</div>
-		</div>
-	</header>
-
-	{/* 2. Main content */}
-	<main class="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 sm:py-12 flex-1">
-		{/* Hero */}
-		<div class="text-center max-w-3xl mx-auto mb-10 sm:mb-12">
-			<h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-zinc-900 leading-tight">
-				no but actually, what <span class="text-pink-600 font-black underline decoration-pink-300 decoration-wavy decoration-2">THE FUCK</span> are rights?
-			</h1>
-			<p class="mt-4 text-base sm:text-lg text-zinc-600 leading-relaxed">
-				well, welcome to your first steps. welcome to the club! <span class="text-zinc-500 font-normal sm:inline block">(and welcome if you're also not queer)</span>
-			</p>
-		</div>
-
-		{/* 3. Three cards from wireframe */}
-		<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-			{/* Card 1: quick! give me informations!! */}
-			<div id="directory" class="scroll-mt-24 flex flex-col justify-between rounded-2xl border border-pink-100 bg-white p-6 transition-colors hover:border-pink-300" data-ui>
-				<div>
-					<div class="flex items-center gap-2 mb-2">
-						<svg class="h-5 w-5 text-pink-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
-							<path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-						</svg>
-						<h2 class="text-lg font-bold text-zinc-900">quick! give me informations!!</h2>
-					</div>
-					<p class="text-xs text-zinc-600 mb-4 leading-relaxed">
-						Find your legal protections, transition rules, and safety reality right where you live.
-					</p>
-
-					{/* Country selector */}
-					<div class="space-y-1.5">
-						<label for="country-selector" class="block text-xs font-semibold text-zinc-700">
-							Select your country or region:
-						</label>
-						<div class="relative">
-							<select
-								id="country-selector"
-								class="w-full appearance-none rounded-xl border border-pink-200 bg-pink-50/30 px-3.5 py-2.5 text-sm font-medium text-zinc-800 transition-colors focus:border-pink-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-pink-200 cursor-pointer"
-							>
-								<optgroup label="Countries">
-									<option value="france" selected>France</option>
-									<option value="germany">Germany</option>
-									<option value="uk">United Kingdom</option>
-									<option value="canada">Canada</option>
-									<option value="poland">Poland</option>
-									<option value="us-fed">United States (Federal)</option>
-								</optgroup>
-								<optgroup label="US States (jurisdictions vary wildly)">
-									<option value="tx">Texas (TX): hostile policies :p</option>
-									<option value="fl">Florida (FL): severe bans</option>
-									<option value="ca">California (CA): sanctuary protections</option>
-									<option value="ny">New York (NY): solid protections</option>
-									<option value="wa">Washington (WA): affirming state</option>
-								</optgroup>
-							</select>
-							<div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-pink-500" aria-hidden="true">
-								<svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-									<path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
-								</svg>
-							</div>
-						</div>
-					</div>
-
-					{/* Dynamic legal quick-sheet snippet */}
-					<div id="quick-info-box" class="mt-4 rounded-xl bg-pink-50/40 p-3.5 text-xs space-y-2 border border-pink-100" data-ui>
-						<div class="flex items-center justify-between pb-1.5">
-							<span class="font-bold text-zinc-900" id="info-country-name">France</span>
-							<span class="rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-bold text-emerald-800" id="info-status-badge">legal and protected</span>
-						</div>
-						<div class="space-y-1.5 text-zinc-700">
-							<div class="flex items-start gap-1.5">
-								<span class="text-emerald-600 font-bold" aria-hidden="true">&#x2713;</span>
-								<span id="info-decrim">Decriminalized since 1791</span>
-							</div>
-							<div class="flex items-start gap-1.5">
-								<span class="text-emerald-600 font-bold" aria-hidden="true">&#x2713;</span>
-								<span id="info-marriage">Marriage equality and adoption (2013)</span>
-							</div>
-							<div class="flex items-start gap-1.5">
-								<span class="text-amber-600 font-bold" aria-hidden="true">&#x2696;</span>
-								<span id="info-gender">Gender marker change (court, no surgery)</span>
-							</div>
-							<div class="flex items-start gap-1.5">
-								<span class="text-emerald-600 font-bold" aria-hidden="true">&#x2713;</span>
-								<span id="info-conversion">Conversion therapy banned (2022)</span>
-							</div>
-						</div>
-					</div>
-				</div>
-
-				<div class="mt-5 pt-2 text-center">
-					<a href="#directory" class="text-xs font-semibold text-pink-600 hover:text-pink-700 hover:underline">
-						(or see general stuff like the UN or whatever)
+						read the full page &rarr;
 					</a>
 				</div>
 			</div>
 
-			{/* Card 2: who are we? */}
-			<div id="about" class="scroll-mt-24 flex flex-col justify-between rounded-2xl border border-pink-100 bg-white p-6 transition-colors hover:border-pink-300" data-ui>
-				<div>
-					<div class="flex items-center gap-2 mb-2">
-						<svg class="h-5 w-5 text-pink-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
-							<path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-						</svg>
-						<h2 class="text-lg font-bold text-zinc-900">who are we?</h2>
-					</div>
+			<div class="mt-5 pt-2 text-center">
+				<a href="/countries" class="text-xs font-semibold text-accent hover:text-accent-strong hover:underline">
+					(or browse every jurisdiction &rarr;)
+				</a>
+			</div>
+		</Card>
 
-					<p class="font-serif italic text-base text-zinc-900 mb-3 bg-pink-50/50 p-3 rounded-xl border border-pink-100/60" data-ui>
-						"nobody, really. two students."
-					</p>
-
-					<p class="text-xs text-zinc-600 leading-relaxed mb-4">
-						no but we really want to help queer people. as a silly little site project because reading 90-page legal gazettes when you're overwhelmed is the worst.
-					</p>
-
-					<div class="inline-flex items-center gap-1.5 rounded-full bg-pink-50 px-3 py-1 text-[11px] font-semibold text-pink-800">
-						<svg class="h-3.5 w-3.5 text-pink-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
-							<path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-						</svg>
-						<span>(not pro health info)</span>
-					</div>
+		{/* Card 2: who are we? */}
+		<Card id="about" class="flex scroll-mt-24 flex-col justify-between" interactive>
+			<div>
+				<div class="mb-2 flex items-center gap-2">
+					<svg class="h-5 w-5 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+						<path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+					</svg>
+					<h2 class="text-lg font-bold text-ink">who are we?</h2>
 				</div>
 
-				<div class="mt-5 pt-2">
-					<a href="https://github.com/lonersoft/rights.wtf#why-this-exists" target="_blank" rel="noopener noreferrer" class="text-xs font-semibold text-zinc-700 hover:text-pink-600 flex items-center justify-between">
-						<span>read our story and method</span>
-						<span aria-hidden="true">&rarr;</span>
-					</a>
+				<p class="mb-3 rounded-xl border border-line/60 bg-accent-soft/50 p-3 font-serif text-base italic text-ink">
+					"nobody, really. two students."
+				</p>
+
+				<p class="mb-4 text-xs leading-relaxed text-ink-muted">
+					no but we really want to help queer people. as a silly little site project because reading 90-page legal gazettes when you're overwhelmed is the worst.
+				</p>
+
+				<Badge tone="accent" border={false} size="md">
+					<svg class="h-3.5 w-3.5 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+						<path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+					</svg>
+					<span>(not pro health info)</span>
+				</Badge>
+			</div>
+
+			<div class="mt-5 pt-2">
+				<a href="https://github.com/lonersoft/rights.wtf#why-this-exists" target="_blank" rel="noopener noreferrer" class="flex items-center justify-between text-xs font-semibold text-ink-muted hover:text-accent">
+					<span>read our story and method</span>
+					<span aria-hidden="true">&rarr;</span>
+				</a>
+			</div>
+		</Card>
+
+		{/* Card 3: starting? unsure? */}
+		<Card id="guide" class="flex scroll-mt-24 flex-col justify-between" interactive>
+			<div>
+				<div class="mb-2 flex items-center gap-2">
+					<svg class="h-5 w-5 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+						<path stroke-linecap="round" stroke-linejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+					</svg>
+					<h2 class="text-lg font-bold text-ink">starting? unsure?</h2>
+				</div>
+
+				<p class="mb-2 text-sm font-semibold leading-snug text-ink">
+					the totally™ complete and full list of queer identities
+				</p>
+
+				<p class="mb-4 text-xs leading-relaxed text-ink-faint">
+					(realistically you don't need a fixed label but it can help u get an idea)
+				</p>
+
+				<div class="mb-4 flex flex-wrap gap-1.5 text-[11px]">
+					<span class="rounded-lg bg-accent-soft px-2 py-0.5 font-medium text-accent-strong">trans</span>
+					<span class="rounded-lg bg-accent-soft px-2 py-0.5 font-medium text-accent-strong">non-binary</span>
+					<span class="rounded-lg bg-accent-soft px-2 py-0.5 font-medium text-accent-strong">asexual</span>
+					<span class="rounded-lg bg-accent-soft px-2 py-0.5 font-medium text-accent-strong">bi / pan</span>
+					<span class="rounded-lg bg-accent-soft px-2 py-0.5 font-medium text-accent-strong">questioning</span>
+				</div>
+
+				<div class="flex items-center justify-center gap-1.5 rounded-xl bg-accent-soft/70 p-2.5 text-center text-xs font-semibold text-accent-strong">
+					<svg class="h-3.5 w-3.5 text-accent" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+						<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
+					</svg>
+					<span>remember to take ur time</span>
 				</div>
 			</div>
 
-			{/* Card 3: starting? unsure? */}
-			<div id="guide" class="scroll-mt-24 flex flex-col justify-between rounded-2xl border border-pink-100 bg-white p-6 transition-colors hover:border-pink-300" data-ui>
-				<div>
-					<div class="flex items-center gap-2 mb-2">
-						<svg class="h-5 w-5 text-pink-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
-							<path stroke-linecap="round" stroke-linejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-						</svg>
-						<h2 class="text-lg font-bold text-zinc-900">starting? unsure?</h2>
-					</div>
-
-					<p class="text-sm font-semibold text-zinc-900 mb-2 leading-snug">
-						the totally™ complete and full list of queer identities
-					</p>
-
-					<p class="text-xs text-zinc-500 leading-relaxed mb-4">
-						(realistically you don't need a fixed label but it can help u get an idea)
-					</p>
-
-					<div class="flex flex-wrap gap-1.5 mb-4 text-[11px]">
-						<span class="rounded-lg bg-pink-50 px-2 py-0.5 font-medium text-pink-700">trans</span>
-						<span class="rounded-lg bg-pink-50 px-2 py-0.5 font-medium text-pink-700">non-binary</span>
-						<span class="rounded-lg bg-pink-50 px-2 py-0.5 font-medium text-pink-700">asexual</span>
-						<span class="rounded-lg bg-pink-50 px-2 py-0.5 font-medium text-pink-700">bi / pan</span>
-						<span class="rounded-lg bg-pink-50 px-2 py-0.5 font-medium text-pink-700">questioning</span>
-					</div>
-
-					<div class="rounded-xl bg-pink-50/70 p-2.5 text-center text-xs font-semibold text-pink-700 flex items-center justify-center gap-1.5">
-						<svg class="h-3.5 w-3.5 text-pink-500" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-							<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
-						</svg>
-						<span>remember to take ur time</span>
-					</div>
-				</div>
-
-				<div class="mt-5 pt-2">
-					<a href="https://github.com/lonersoft/rights.wtf#what-we-cover" target="_blank" rel="noopener noreferrer" class="text-xs font-semibold text-pink-600 hover:text-pink-700 flex items-center justify-between">
-						<span>explore queer field guide</span>
-						<span aria-hidden="true">&rarr;</span>
-					</a>
-				</div>
+			<div class="mt-5 pt-2">
+				<a href="https://github.com/lonersoft/rights.wtf#what-we-cover" target="_blank" rel="noopener noreferrer" class="flex items-center justify-between text-xs font-semibold text-accent hover:text-accent-strong">
+					<span>explore queer field guide</span>
+					<span aria-hidden="true">&rarr;</span>
+				</a>
 			</div>
-		</div>
+		</Card>
+	</div>
 
-		{/* 4. Helplines Section (Note 1 from wireframe) */}
-		<section id="helplines" class="scroll-mt-24 mb-10 rounded-2xl border border-pink-100 bg-white p-6 sm:p-8" data-ui>
-			<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 mb-4">
+	{/* Helplines */}
+	<section id="helplines" class="mb-10 scroll-mt-24">
+		<Card padding="lg">
+			<div class="mb-4 flex flex-col justify-between gap-4 pb-2 sm:flex-row sm:items-center">
 				<div>
 					<div class="flex items-center gap-2">
-						<svg class="h-5 w-5 text-rose-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+						<svg class="h-5 w-5 text-bad" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
 							<path stroke-linecap="round" stroke-linejoin="round" d="M18.364 5.636a9 9 0 010 12.728m0 0l-2.829-2.829m2.829 2.829L21 21M15.536 8.464a5 5 0 010 7.072m0 0l-2.829-2.829m-4.243 2.829a4.978 4.978 0 01-1.414-2.83m-1.414 5.658a9 9 0 01-2.167-9.238m7.824 2.167a1 1 0 111.414 1.414m-1.414-1.414L3 3m8.293 8.293l1.414 1.414" />
 						</svg>
-						<h3 class="text-xl font-bold text-zinc-900">helplines (per country)</h3>
+						<h3 class="text-xl font-bold text-ink">helplines (per country)</h3>
 					</div>
-					<p class="text-xs text-zinc-500 mt-1">
+					<p class="mt-1 text-xs text-ink-faint">
 						vetted, free, non-judgmental crisis and peer support around the world.
 					</p>
 				</div>
-				<span class="text-xs font-semibold text-pink-700 bg-pink-50 px-3 py-1 rounded-full self-start sm:self-auto">
+				<Badge tone="accent" size="md" class="self-start sm:self-auto">
 					24/7 • anonymous • confidential
-				</span>
+				</Badge>
 			</div>
 
 			{/* Location indicator based on IP */}
-			<div class="mb-6 flex items-center gap-2 rounded-xl bg-pink-50/40 p-3 text-xs text-zinc-700 border border-pink-100/70" data-ui>
-				<span class="text-zinc-500 font-medium">your detected country:</span>
-				<span id="user-geo-country" class="font-bold text-pink-700 inline-flex items-center gap-1.5">
-					<span class="inline-block h-2 w-2 rounded-full bg-pink-400" aria-hidden="true"></span>
+			<div class="mb-6 flex items-center gap-2 rounded-xl border border-line/70 bg-accent-soft/40 p-3 text-xs text-ink-muted">
+				<span class="font-medium text-ink-faint">your detected country:</span>
+				<span id="user-geo-country" class="inline-flex items-center gap-1.5 font-bold text-accent-strong">
+					<span class="inline-block h-2 w-2 rounded-full bg-accent" aria-hidden="true"></span>
 					<span>detecting location...</span>
 				</span>
 			</div>
 
-			<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 text-xs">
-				<div class="rounded-xl bg-pink-50/20 p-4 space-y-1.5" data-ui>
-					<div class="font-bold text-zinc-900">Worldwide / Global</div>
-					<div class="font-semibold text-pink-700 text-sm">findahelpline.com</div>
-					<p class="text-zinc-600 text-[11px]">Free confidential support in 130+ countries by chat, text, or call.</p>
-					<a href="https://findahelpline.com" target="_blank" rel="noopener noreferrer" class="inline-block text-pink-600 font-bold hover:underline pt-1">visit site &rarr;</a>
-				</div>
+			<ul class="grid grid-cols-1 gap-4 text-xs sm:grid-cols-2 md:grid-cols-4">
+				{helplines.map((h) => <HelplineCard {...h} />)}
+			</ul>
+		</Card>
+	</section>
 
-				<div class="rounded-xl bg-pink-50/20 p-4 space-y-1.5" data-ui>
-					<div class="font-bold text-zinc-900">United States & Canada</div>
-					<div class="font-semibold text-pink-700 text-sm">Trevor Project & Trans Lifeline</div>
-					<p class="text-zinc-600 text-[11px]">Call 866-488-7386 or text START to 678-678. Peer support run by trans folks.</p>
-					<a href="https://www.thetrevorproject.org" target="_blank" rel="noopener noreferrer" class="inline-block text-pink-600 font-bold hover:underline pt-1">thetrevorproject.org &rarr;</a>
-				</div>
+	{/* Immediate-help banner */}
+	<div class="flex flex-col items-center justify-center gap-1.5 rounded-full border border-line-strong bg-accent-soft/80 px-6 py-3.5 text-center text-xs text-ink sm:flex-row sm:text-sm">
+		<span>need immediate assistance? help is available, 24/7 and anonymously.</span>
+		<a
+			href="https://findahelpline.com"
+			target="_blank"
+			rel="noopener noreferrer"
+			class="font-bold text-accent-strong underline transition-colors hover:text-accent-ink"
+		>
+			visit findahelpline.com.
+		</a>
+	</div>
 
-				<div class="rounded-xl bg-pink-50/20 p-4 space-y-1.5" data-ui>
-					<div class="font-bold text-zinc-900">France</div>
-					<div class="font-semibold text-pink-700 text-sm">SOS Homophobie & Le Refuge</div>
-					<p class="text-zinc-600 text-[11px]">Ecoute anonyme au 01 48 06 42 41 et hébergement d'urgence pour jeunes.</p>
-					<a href="https://www.sos-homophobie.org" target="_blank" rel="noopener noreferrer" class="inline-block text-pink-600 font-bold hover:underline pt-1">sos-homophobie.org &rarr;</a>
-				</div>
+	<Footer slot="footer" />
+</Page>
 
-				<div class="rounded-xl bg-pink-50/20 p-4 space-y-1.5" data-ui>
-					<div class="font-bold text-zinc-900">United Kingdom</div>
-					<div class="font-semibold text-pink-700 text-sm">Switchboard LGBT+</div>
-					<p class="text-zinc-600 text-[11px]">Call 0800 0119 100 (10am to 10pm daily). A safe space to discuss anything.</p>
-					<a href="https://switchboard.lgbt" target="_blank" rel="noopener noreferrer" class="inline-block text-pink-600 font-bold hover:underline pt-1">switchboard.lgbt &rarr;</a>
-				</div>
-			</div>
-		</section>
+<script type="application/json" id="jurisdiction-data" is:inline set:html={json}></script>
 
-		{/* 5. Pill Helpline Banner (from wireframe bottom) */}
-		<div class="rounded-full border border-pink-200 bg-pink-50/80 px-6 py-3.5 text-center text-xs sm:text-sm text-zinc-800 flex flex-col sm:flex-row items-center justify-center gap-1.5" data-ui>
-			<span>need immediate assistance? help is available, 24/7 and anonymously.</span>
-			<a
-				href="https://findahelpline.com"
-				target="_blank"
-				rel="noopener noreferrer"
-				class="font-bold text-pink-700 underline hover:text-pink-800 transition-colors"
-			>
-				visit findahelpline.com.
-			</a>
-		</div>
-	</main>
-
-	{/* 6. Footer (from wireframe) */}
-	<footer class="w-full bg-white py-6 text-center text-xs text-zinc-500 border-t border-pink-100" data-ui>
-		<div class="mx-auto max-w-4xl px-4 space-y-1.5">
-			<p class="font-medium text-zinc-700">
-				(c) <a href="https://loners.software" target="_blank" rel="noopener noreferrer" class="hover:text-pink-600 transition-colors">Loners can Make Software</a> - a 501(c)(3) nonprofit
-			</p>
-			<p class="text-[11px] text-zinc-500">
-				remember this is not any kind of professional guidance and you also need to pursue your own research!
-			</p>
-			<div class="pt-2 flex justify-center gap-4 text-[11px] text-zinc-500">
-				<a href="https://github.com/lonersoft/rights.wtf/blob/main/LICENSE" target="_blank" rel="noopener noreferrer" class="hover:text-pink-600">license</a>
-				<span>•</span>
-				<a href="https://github.com/lonersoft/rights.wtf" target="_blank" rel="noopener noreferrer" class="hover:text-pink-600">source code</a>
-				<span>•</span>
-				<a href="https://github.com/lonersoft/rights.wtf/issues/new/choose" target="_blank" rel="noopener noreferrer" class="hover:text-pink-600">submit anything</a>
-			</div>
-		</div>
-	</footer>
-</div>
-
-{/* Client script */}
 <script>
-	// 1. Mobile Navigation Menu Toggle
-	const mobileToggle = document.getElementById('mobile-nav-toggle');
-	const mobileMenu = document.getElementById('mobile-nav-menu');
-
-	if (mobileToggle && mobileMenu) {
-		mobileToggle.addEventListener('click', (e) => {
-			e.stopPropagation();
-			const isHidden = mobileMenu.classList.contains('hidden');
-			mobileMenu.classList.toggle('hidden');
-			mobileToggle.setAttribute('aria-expanded', isHidden ? 'true' : 'false');
-		});
-
-		document.querySelectorAll('.mobile-nav-link').forEach((link) => {
-			link.addEventListener('click', () => {
-				mobileMenu.classList.add('hidden');
-				mobileToggle.setAttribute('aria-expanded', 'false');
-			});
-		});
-
-		document.addEventListener('click', (e) => {
-			if (!mobileMenu.contains(e.target as Node) && !mobileToggle.contains(e.target as Node)) {
-				mobileMenu.classList.add('hidden');
-				mobileToggle.setAttribute('aria-expanded', 'false');
-			}
-		});
-	}
-
-	// 2. Interactive Country / State Data Dictionary
-	const countryData: Record<string, {
-		name: string;
-		status: string;
-		badgeClass: string;
-		decrim: string;
-		marriage: string;
-		gender: string;
-		conversion: string;
-	}> = {
-		france: {
-			name: 'France',
-			status: 'legal and protected',
-			badgeClass: 'bg-emerald-100 text-emerald-800',
-			decrim: 'Decriminalized since 1791',
-			marriage: 'Marriage equality and adoption (2013)',
-			gender: 'Gender marker change (court, no surgery)',
-			conversion: 'Conversion therapy banned (2022)'
-		},
-		germany: {
-			name: 'Germany',
-			status: 'self-id active',
-			badgeClass: 'bg-emerald-100 text-emerald-800',
-			decrim: 'Decriminalized in 1969/1994',
-			marriage: 'Marriage equality (2017)',
-			gender: 'Self-ID law (Selbstbestimmungsgesetz, Nov 2024)',
-			conversion: 'Conversion therapy banned for minors (2020)'
-		},
-		uk: {
-			name: 'United Kingdom',
-			status: 'legal protections',
-			badgeClass: 'bg-sky-100 text-sky-800',
-			decrim: 'Decriminalized (1967 E&W, 1980 Scot, 1982 NI)',
-			marriage: 'Marriage equality (2014 England/Wales, 2020 NI)',
-			gender: 'Gender Recognition Act (medical diagnosis panel)',
-			conversion: 'Conversion practices ban under parliamentary debate'
-		},
-		canada: {
-			name: 'Canada',
-			status: 'constitutional protection',
-			badgeClass: 'bg-emerald-100 text-emerald-800',
-			decrim: 'Decriminalized in 1969',
-			marriage: 'Marriage equality nationwide (2005)',
-			gender: 'Self-declaration on federal passports & IDs (2017)',
-			conversion: 'Criminal Code ban on conversion practices (2022)'
-		},
-		poland: {
-			name: 'Poland',
-			status: 'mixed protections',
-			badgeClass: 'bg-amber-100 text-amber-800',
-			decrim: 'Decriminalized in 1932',
-			marriage: 'Constitutional restriction (civil partnerships debated)',
-			gender: 'Court lawsuit against parents required for gender marker',
-			conversion: 'No nationwide conversion practice ban'
-		},
-		'us-fed': {
-			name: 'United States (Federal)',
-			status: 'patchwork state laws',
-			badgeClass: 'bg-slate-100 text-slate-800',
-			decrim: 'Lawrence v. Texas (2003)',
-			marriage: 'Respect for Marriage Act (2022) / Obergefell (2015)',
-			gender: 'Self-ID "X" marker on federal passports',
-			conversion: 'Banned in 27 states + DC, allowed in others'
-		},
-		tx: {
-			name: 'Texas (US State)',
-			status: 'hostile / high-risk',
-			badgeClass: 'bg-rose-100 text-rose-800',
-			decrim: 'Federal override only (state penal code still unrepealed)',
-			marriage: 'Federal Obergefell protections apply',
-			gender: 'DMV & DPS block gender changes on state IDs (2024)',
-			conversion: 'No ban; youth gender affirming care banned (SB 14)'
-		},
-		fl: {
-			name: 'Florida (US State)',
-			status: 'hostile / restrictive',
-			badgeClass: 'bg-rose-100 text-rose-800',
-			decrim: 'Federal override only',
-			marriage: 'Federal Obergefell protections apply',
-			gender: 'Drivers license gender changes blocked (2024)',
-			conversion: 'Local conversion bans struck down by 11th Circuit'
-		},
-		ca: {
-			name: 'California (US State)',
-			status: 'sanctuary protections',
-			badgeClass: 'bg-emerald-100 text-emerald-800',
-			decrim: 'Decriminalized in 1975',
-			marriage: 'Full constitutional marriage equality',
-			gender: 'Full Self-ID for state birth certificates & IDs',
-			conversion: 'Trans Refuge Sanctuary Law (SB 107 protects families)'
-		},
-		ny: {
-			name: 'New York (US State)',
-			status: 'strong protections',
-			badgeClass: 'bg-emerald-100 text-emerald-800',
-			decrim: 'Decriminalized in 1980',
-			marriage: 'Marriage Equality Act (2011)',
-			gender: 'Gender Recognition Act (Self-ID with "X" marker)',
-			conversion: 'Conversion therapy banned for all minors (2019)'
-		},
-		wa: {
-			name: 'Washington (US State)',
-			status: 'sanctuary protections',
-			badgeClass: 'bg-emerald-100 text-emerald-800',
-			decrim: 'Decriminalized in 1975',
-			marriage: 'Marriage equality (2012)',
-			gender: 'Self-ID marker change on state vital records',
-			conversion: 'Conversion therapy ban + shield law protection'
-		}
-	};
-
-	const selector = document.getElementById('country-selector') as HTMLSelectElement | null;
-	const nameEl = document.getElementById('info-country-name');
-	const statusEl = document.getElementById('info-status-badge');
-	const decrimEl = document.getElementById('info-decrim');
-	const marriageEl = document.getElementById('info-marriage');
-	const genderEl = document.getElementById('info-gender');
-	const conversionEl = document.getElementById('info-conversion');
-
-	if (selector && nameEl && statusEl && decrimEl && marriageEl && genderEl && conversionEl) {
-		selector.addEventListener('change', () => {
-			const selectedKey = selector.value;
-			const data = countryData[selectedKey];
-			if (data) {
-				nameEl.textContent = data.name;
-				statusEl.textContent = data.status;
-				statusEl.className = `rounded-full px-2 py-0.5 text-[10px] font-bold ${data.badgeClass}`;
-				decrimEl.textContent = data.decrim;
-				marriageEl.textContent = data.marriage;
-				genderEl.textContent = data.gender;
-				conversionEl.textContent = data.conversion;
-			}
-		});
-	}
-
-	// 3. Quick Exit: Press Escape 3 times to immediately open Google
-	let escHits = 0;
-	let escTimer: ReturnType<typeof setTimeout> | null = null;
-
-	window.addEventListener('keydown', (e) => {
-		if (e.key === 'Escape') {
-			escHits++;
-			if (escTimer) clearTimeout(escTimer);
-			if (escHits >= 3) {
-				window.location.replace('https://www.google.com');
-				return;
-			}
-			escTimer = setTimeout(() => {
-				escHits = 0;
-			}, 1500);
-		}
-	});
-
-	// One-time safety alert notice display logic
-	const alertBanner = document.getElementById('quick-exit-alert');
-	const dismissBtn = document.getElementById('dismiss-exit-alert');
-
-	try {
-		if (alertBanner && !localStorage.getItem('rights_exit_alert_dismissed')) {
-			alertBanner.classList.remove('hidden');
-		}
-	} catch (e) {
-		if (alertBanner) alertBanner.classList.remove('hidden');
-	}
-
-	if (dismissBtn && alertBanner) {
-		dismissBtn.addEventListener('click', () => {
-			alertBanner.classList.add('hidden');
-			try {
-				localStorage.setItem('rights_exit_alert_dismissed', '1');
-			} catch (e) {}
-		});
-	}
-
-	// 4. Client-side Geo IP Country Detection
-	async function detectCountry() {
-		const targetEl = document.getElementById('user-geo-country');
-		if (!targetEl) return;
-
-		let code = '';
-		let regionName = '';
-
-		// 1. Direct query to ipinfo.io/json
-		try {
-			const res = await fetch('https://ipinfo.io/json');
-			if (res.ok) {
-				const data = await res.json();
-				if (data.country) {
-					code = data.country;
-					if (data.region && data.region !== data.city) {
-						regionName = data.region;
-					}
-				}
-			}
-		} catch {}
-
-		// 2. Fallback to api.country.is
-		if (!code) {
-			try {
-				const res = await fetch('https://api.country.is');
-				if (res.ok) {
-					const data = await res.json();
-					if (data.country) code = data.country;
-				}
-			} catch {}
-		}
-
-		// 3. Fallback to internal Cloudflare Worker route /api/geo.json
-		if (!code) {
-			try {
-				const res = await fetch('/api/geo.json');
-				if (res.ok) {
-					const json = await res.json();
-					if (json.country && json.country !== 'XX') code = json.country;
-				}
-			} catch {}
-		}
-
-		if (code) {
-			let countryName = code;
-			try {
-				const displayNames = new Intl.DisplayNames(['en'], { type: 'region' });
-				countryName = displayNames.of(code) || code;
-			} catch {}
-			const regionSuffix = regionName ? ` · ${regionName}` : '';
-			targetEl.innerHTML = `<span class="text-zinc-900 font-bold">${countryName}${regionSuffix}</span>`;
-			return;
-		}
-
-		targetEl.textContent = 'Worldwide (location unavailable)';
-	}
-
-	detectCountry();
+	import "../scripts/home";
 </script>

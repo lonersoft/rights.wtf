@@ -1,0 +1,96 @@
+{
+	"code": "ca",
+	"name": "Canada",
+	"parent": null,
+	"region": "Americas",
+	"verification": "verified",
+	"updatedAt": "2026-11-01",
+	"helplines": [
+		{
+			"name": "Trans Lifeline",
+			"contact": "877-330-6366",
+			"url": "https://translifeline.org"
+		}
+	],
+	"topics": {
+		"decriminalization": {
+			"status": "protected",
+			"summary": "Sex between people of the same sex was decriminalised in 1969 by the Criminal Law Amendment Act. The same age of consent — 16 — now applies to everyone.",
+			"sources": [
+				{
+					"label": "Criminal Code, s. 150.1 (age of consent)",
+					"url": "https://laws-lois.justice.gc.ca/eng/acts/c-46/section-150.1.html",
+					"kind": "primary-law"
+				},
+				{
+					"label": "Canadian Museum of History — Decriminalization",
+					"url": "https://www.historymuseum.ca/teachers-zone/2slgbtqia-history-and-identities-in-canada/decriminalization/",
+					"kind": "government"
+				}
+			],
+			"since": "1969",
+			"verifiedAt": "2026-11-01"
+		},
+		"marriage": {
+			"status": "protected",
+			"summary": "Marriage for civil purposes is the lawful union of two persons, under the Civil Marriage Act 2005. Religious officials may refuse to perform a marriage that conflicts with their beliefs.",
+			"sources": [
+				{
+					"label": "Civil Marriage Act, S.C. 2005, c. 33",
+					"url": "https://laws-lois.justice.gc.ca/eng/acts/c-31.5/",
+					"kind": "primary-law"
+				}
+			],
+			"since": "2005",
+			"verifiedAt": "2026-11-01"
+		},
+		"genderRecognition": {
+			"status": "partial",
+			"summary": "Gender identity and gender expression are protected grounds under the Canadian Human Rights Act since 2017. Federal documents such as passports allow an X marker, but birth certificates are issued by provinces and territories, so the process varies by where you live.",
+			"sources": [
+				{
+					"label": "Canadian Human Rights Act",
+					"url": "https://laws-lois.justice.gc.ca/eng/acts/h-6/",
+					"kind": "primary-law"
+				},
+				{
+					"label": "IRCC — changing the sex or gender designation on a passport",
+					"url": "https://www.canada.ca/en/immigration-refugees-citizenship/services/canadian-passports/change-sex.html",
+					"kind": "government"
+				}
+			],
+			"since": "2017",
+			"verifiedAt": "2026-11-01"
+		},
+		"conversionTherapy": {
+			"status": "protected",
+			"summary": "Conversion practices are a criminal offence under s. 320.1 of the Criminal Code, added in 2022. The offence also covers advertising them, profiting from them, and taking a child out of Canada for them.",
+			"sources": [
+				{
+					"label": "Criminal Code, s. 320.1 (conversion therapy)",
+					"url": "https://laws-lois.justice.gc.ca/eng/acts/c-46/section-320.1.html",
+					"kind": "primary-law"
+				}
+			],
+			"since": "2022",
+			"verifiedAt": "2026-11-01"
+		},
+		"asylum": {
+			"status": "partial",
+			"summary": "Claims can be based on sexual orientation or gender identity as membership of a particular social group under s. 96 of the Immigration and Refugee Protection Act. The Immigration and Refugee Board has a guideline on handling these cases.",
+			"sources": [
+				{
+					"label": "Immigration and Refugee Protection Act, s. 96",
+					"url": "https://laws-lois.justice.gc.ca/eng/acts/i-2.5/section-96.html",
+					"kind": "primary-law"
+				},
+				{
+					"label": "IRB Chairperson's Guideline 9 — sexual orientation and gender identity",
+					"url": "https://irb.gc.ca/en/legal-policy/policies/Pages/GuideDir09.aspx",
+					"kind": "government"
+				}
+			],
+			"verifiedAt": "2026-11-01"
+		}
+	}
+}

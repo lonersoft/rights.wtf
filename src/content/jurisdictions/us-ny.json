@@ -1,0 +1,76 @@
+{
+	"code": "us-ny",
+	"name": "New York (US)",
+	"parent": "us",
+	"region": "Americas",
+	"verification": "imported",
+	"updatedAt": "2026-11-01",
+	"helplines": [
+		{
+			"name": "Trevor Project",
+			"contact": "866-488-7386",
+			"url": "https://www.thetrevorproject.org"
+		}
+	],
+	"topics": {
+		"decriminalization": {
+			"status": "protected",
+			"summary": "Decriminalized.",
+			"sources": [
+				{
+					"label": "ILGA World",
+					"url": "https://ilga.org/",
+					"kind": "monitor"
+				}
+			],
+			"since": "1980"
+		},
+		"marriage": {
+			"status": "protected",
+			"summary": "Marriage Equality Act.",
+			"sources": [
+				{
+					"label": "ILGA World",
+					"url": "https://ilga.org/",
+					"kind": "monitor"
+				}
+			],
+			"since": "2011"
+		},
+		"genderRecognition": {
+			"status": "protected",
+			"summary": "Self-ID with an \"X\" marker.",
+			"sources": [
+				{
+					"label": "TGEU Trans Rights Map",
+					"url": "https://transrightsmap.tgeu.org/",
+					"kind": "monitor"
+				}
+			],
+			"since": "2021"
+		},
+		"conversionTherapy": {
+			"status": "protected",
+			"summary": "Banned for minors.",
+			"sources": [
+				{
+					"label": "ILGA World",
+					"url": "https://ilga.org/",
+					"kind": "monitor"
+				}
+			],
+			"since": "2019"
+		},
+		"asylum": {
+			"status": "partial",
+			"summary": "Federal asylum rules apply.",
+			"sources": [
+				{
+					"label": "ILGA World",
+					"url": "https://ilga.org/",
+					"kind": "monitor"
+				}
+			]
+		}
+	}
+}

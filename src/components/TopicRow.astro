@@ -1,0 +1,50 @@
+---
+import { STATUS_STYLE, STATUS_TEXT, type TopicStatus } from "../lib/status";
+
+interface Source {
+	label: string;
+	url: string;
+}
+
+interface Props {
+	label: string;
+	status: TopicStatus;
+	summary?: string;
+	since?: string;
+	sources?: Source[];
+}
+
+const { label, status, summary, since, sources = [] } = Astro.props;
+const style = STATUS_STYLE[status] ?? STATUS_STYLE.unknown;
+---
+
+<div class="py-4">
+	<div class="flex items-start justify-between gap-4">
+		<dt class="text-sm font-bold text-ink">{label}</dt>
+		<dd class={`flex shrink-0 items-center gap-1.5 text-xs font-bold ${style.text}`}>
+			<span class={`inline-block h-2 w-2 rounded-full ${style.dot}`} aria-hidden="true" />
+			<span aria-hidden="true">{style.mark}</span>
+			<span>{STATUS_TEXT[status]}</span>
+		</dd>
+	</div>
+	<dd class="mt-1.5 text-sm leading-relaxed text-ink-muted">
+		{status === "unknown" ? "not verified yet." : summary}
+		{since && <span class="text-ink-faint"> · {since}</span>}
+	</dd>
+	{
+		sources.length > 0 && (
+			<dd class="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-[11px] text-ink-faint">
+				{sources.map((s) => (
+					<a
+						href={s.url}
+						target="_blank"
+						rel="noopener noreferrer"
+						class="underline decoration-line-strong hover:text-accent"
+					>
+						{s.label}
+					</a>
+				))}
+			</dd>
+		)
+	}
+</div>

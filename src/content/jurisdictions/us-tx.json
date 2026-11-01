@@ -1,0 +1,75 @@
+{
+	"code": "us-tx",
+	"name": "Texas (US)",
+	"parent": "us",
+	"region": "Americas",
+	"verification": "imported",
+	"updatedAt": "2026-11-01",
+	"helplines": [
+		{
+			"name": "Trevor Project",
+			"contact": "866-488-7386",
+			"url": "https://www.thetrevorproject.org"
+		}
+	],
+	"topics": {
+		"decriminalization": {
+			"status": "partial",
+			"summary": "Federal override only; state penal code unrepealed.",
+			"sources": [
+				{
+					"label": "ILGA World",
+					"url": "https://ilga.org/",
+					"kind": "monitor"
+				}
+			]
+		},
+		"marriage": {
+			"status": "protected",
+			"summary": "Federal Obergefell protections apply.",
+			"sources": [
+				{
+					"label": "Obergefell v. Hodges",
+					"url": "https://supreme.justia.com/cases/federal/us/576/644/",
+					"kind": "court-ruling"
+				}
+			],
+			"since": "2015"
+		},
+		"genderRecognition": {
+			"status": "restricted",
+			"summary": "State agencies block gender changes on IDs.",
+			"sources": [
+				{
+					"label": "TGEU Trans Rights Map",
+					"url": "https://transrightsmap.tgeu.org/",
+					"kind": "monitor"
+				}
+			],
+			"since": "2024"
+		},
+		"conversionTherapy": {
+			"status": "restricted",
+			"summary": "No ban; youth gender-affirming care restricted (SB 14).",
+			"sources": [
+				{
+					"label": "ILGA World",
+					"url": "https://ilga.org/",
+					"kind": "monitor"
+				}
+			],
+			"since": "2023"
+		},
+		"asylum": {
+			"status": "partial",
+			"summary": "Federal asylum rules apply.",
+			"sources": [
+				{
+					"label": "ILGA World",
+					"url": "https://ilga.org/",
+					"kind": "monitor"
+				}
+			]
+		}
+	}
+}

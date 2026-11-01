@@ -1,0 +1,34 @@
+---
+interface Props {
+	/** Region or grouping label, e.g. "Worldwide / Global". */
+	title?: string;
+	name: string;
+	/** Phone number or other contact detail. */
+	contact?: string;
+	/** Short description. */
+	note?: string;
+	url?: string;
+	linkLabel?: string;
+}
+
+const { title, name, contact, note, url, linkLabel = "visit site" } = Astro.props;
+---
+
+<li class="space-y-1.5 rounded-xl border border-line bg-accent-soft/20 p-4">
+	{title && <div class="text-xs font-bold text-ink">{title}</div>}
+	<div class="text-sm font-semibold text-accent-strong">{name}</div>
+	{contact && <div class="text-sm text-accent-strong">{contact}</div>}
+	{note && <p class="text-[11px] leading-relaxed text-ink-muted">{note}</p>}
+	{
+		url && (
+			<a
+				href={url}
+				target="_blank"
+				rel="noopener noreferrer"
+				class="inline-block pt-1 text-xs font-bold text-accent hover:underline"
+			>
+				{linkLabel} &rarr;
+			</a>
+		)
+	}
+</li>

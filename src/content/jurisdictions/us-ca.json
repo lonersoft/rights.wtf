@@ -1,0 +1,76 @@
+{
+	"code": "us-ca",
+	"name": "California (US)",
+	"parent": "us",
+	"region": "Americas",
+	"verification": "imported",
+	"updatedAt": "2026-11-01",
+	"helplines": [
+		{
+			"name": "Trevor Project",
+			"contact": "866-488-7386",
+			"url": "https://www.thetrevorproject.org"
+		}
+	],
+	"topics": {
+		"decriminalization": {
+			"status": "protected",
+			"summary": "Decriminalized.",
+			"sources": [
+				{
+					"label": "ILGA World",
+					"url": "https://ilga.org/",
+					"kind": "monitor"
+				}
+			],
+			"since": "1975"
+		},
+		"marriage": {
+			"status": "protected",
+			"summary": "Full marriage equality.",
+			"sources": [
+				{
+					"label": "ILGA World",
+					"url": "https://ilga.org/",
+					"kind": "monitor"
+				}
+			],
+			"since": "2013"
+		},
+		"genderRecognition": {
+			"status": "protected",
+			"summary": "Self-ID for state IDs and birth certificates.",
+			"sources": [
+				{
+					"label": "TGEU Trans Rights Map",
+					"url": "https://transrightsmap.tgeu.org/",
+					"kind": "monitor"
+				}
+			],
+			"since": "2019"
+		},
+		"conversionTherapy": {
+			"status": "protected",
+			"summary": "Ban plus sanctuary protections for families.",
+			"sources": [
+				{
+					"label": "ILGA World",
+					"url": "https://ilga.org/",
+					"kind": "monitor"
+				}
+			],
+			"since": "2022"
+		},
+		"asylum": {
+			"status": "partial",
+			"summary": "State sanctuary policies; federal asylum rules apply.",
+			"sources": [
+				{
+					"label": "ILGA World",
+					"url": "https://ilga.org/",
+					"kind": "monitor"
+				}
+			]
+		}
+	}
+}

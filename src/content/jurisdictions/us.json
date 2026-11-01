@@ -1,0 +1,94 @@
+{
+	"code": "us",
+	"name": "United States (Federal)",
+	"parent": null,
+	"region": "Americas",
+	"verification": "verified",
+	"updatedAt": "2026-11-01",
+	"helplines": [
+		{
+			"name": "Trevor Project",
+			"contact": "866-488-7386",
+			"url": "https://www.thetrevorproject.org"
+		},
+		{
+			"name": "Trans Lifeline",
+			"contact": "877-330-6366",
+			"url": "https://translifeline.org"
+		},
+		{
+			"name": "988 Suicide & Crisis Lifeline (Press 3 for LGBTQ+ youth)",
+			"contact": "988",
+			"url": "https://988lifeline.org"
+		}
+	],
+	"topics": {
+		"decriminalization": {
+			"status": "protected",
+			"summary": "State laws criminalizing consensual same-sex sexual conduct are unconstitutional and unenforceable under the Due Process Clause of the Fourteenth Amendment.",
+			"since": "2003",
+			"verifiedAt": "2026-11-01",
+			"sources": [
+				{
+					"label": "Lawrence v. Texas, 539 U.S. 558 (2003)",
+					"url": "https://supreme.justia.com/cases/federal/us/539/558/",
+					"kind": "court-ruling"
+				}
+			]
+		},
+		"marriage": {
+			"status": "protected",
+			"summary": "Same-sex marriage is guaranteed nationwide by the Supreme Court and federally codified against interstate non-recognition by the Respect for Marriage Act.",
+			"since": "2015",
+			"verifiedAt": "2026-11-01",
+			"sources": [
+				{
+					"label": "Obergefell v. Hodges, 576 U.S. 644 (2015)",
+					"url": "https://supreme.justia.com/cases/federal/us/576/644/",
+					"kind": "court-ruling"
+				},
+				{
+					"label": "Respect for Marriage Act, Pub. L. 117-228, 136 Stat. 2305 (2022)",
+					"url": "https://www.congress.gov/bill/117th-congress/house-bill/8404",
+					"kind": "primary-law"
+				}
+			]
+		},
+		"genderRecognition": {
+			"status": "partial",
+			"summary": "Federal U.S. Passports permit self-selected M, F, or X markers without medical certification; state-level identity documents vary from administrative self-ID to outright bans.",
+			"verifiedAt": "2026-11-01",
+			"sources": [
+				{
+					"label": "U.S. Department of State — Selecting Your Gender Marker",
+					"url": "https://travel.state.gov/content/travel/en/passports/need-passport/selecting-your-gender-marker.html",
+					"kind": "government"
+				}
+			]
+		},
+		"conversionTherapy": {
+			"status": "partial",
+			"summary": "No federal statutory ban exists; conversion practices on minors are banned in 27 states and DC, but remain legal in the remaining states.",
+			"verifiedAt": "2026-11-01",
+			"sources": [
+				{
+					"label": "Executive Order 14075 — Advancing Equality for LGBTQI+ Individuals (87 FR 37189)",
+					"url": "https://www.federalregister.gov/documents/2022/06/21/2022-13391/advancing-equality-for-lesbian-gay-bisexual-transgender-queer-and-intersex-individuals",
+					"kind": "government"
+				}
+			]
+		},
+		"asylum": {
+			"status": "partial",
+			"summary": "Persecution on account of sexual orientation or gender identity qualifies for asylum as membership in a particular social group under federal immigration law.",
+			"verifiedAt": "2026-11-01",
+			"sources": [
+				{
+					"label": "Matter of Toboso-Alfonso, 20 I&N Dec. 819 (BIA 1990; AG Order No. 1895-94)",
+					"url": "https://www.justice.gov/eoir/page/file/1104846/dl",
+					"kind": "court-ruling"
+				}
+			]
+		}
+	}
+}

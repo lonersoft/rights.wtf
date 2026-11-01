@@ -1,0 +1,91 @@
+{
+	"code": "de",
+	"name": "Germany",
+	"parent": null,
+	"region": "Europe",
+	"verification": "verified",
+	"updatedAt": "2026-11-01",
+	"helplines": [
+		{
+			"name": "Lesben- und Schwulenverband (LSVD)",
+			"contact": "030 789 54 780",
+			"url": "https://www.lsvd.de"
+		}
+	],
+	"topics": {
+		"decriminalization": {
+			"status": "protected",
+			"summary": "§ 175 of the criminal code, which criminalised sex between men, was repealed in 1994. The same age-of-consent rules now apply to everyone.",
+			"sources": [
+				{
+					"label": "29. Strafrechtsänderungsgesetz (BGBl. I 1994 S. 1168)",
+					"url": "https://dejure.org/BGBl/1994/BGBl._I_S._1168",
+					"kind": "primary-law"
+				},
+				{
+					"label": "BMFSFJ — 30 Jahre Ende des § 175 StGB",
+					"url": "https://www.bmbfsfj.bund.de/bmbfsfj/aktuelles/alle-meldungen/30-jahre-ende-des-strafrechtsparagrafen-175-241178",
+					"kind": "government"
+				}
+			],
+			"since": "1994",
+			"verifiedAt": "2026-11-01"
+		},
+		"marriage": {
+			"status": "protected",
+			"summary": "Civil marriage is open to two people of the same sex under § 1353 of the civil code, as amended in 2017 (\"Ehe für alle\").",
+			"sources": [
+				{
+					"label": "§ 1353 BGB (gesetze-im-internet.de)",
+					"url": "https://www.gesetze-im-internet.de/bgb/__1353.html",
+					"kind": "primary-law"
+				}
+			],
+			"since": "2017",
+			"verifiedAt": "2026-11-01"
+		},
+		"genderRecognition": {
+			"status": "protected",
+			"summary": "Self-declaration at the registry office under the Selbstbestimmungsgesetz, in force since 1 November 2024. A three-month waiting period applies between the declaration of intent and the change.",
+			"sources": [
+				{
+					"label": "SBGG — Gesetz über die Selbstbestimmung in Bezug auf den Geschlechtseintrag",
+					"url": "https://www.gesetze-im-internet.de/sbgg/",
+					"kind": "primary-law"
+				}
+			],
+			"since": "2024",
+			"verifiedAt": "2026-11-01"
+		},
+		"conversionTherapy": {
+			"status": "partial",
+			"summary": "Conversion treatments are banned for anyone under 18 and for adults whose consent is impaired. There is no blanket ban covering all adults.",
+			"sources": [
+				{
+					"label": "KonvBehSchG — Gesetz zum Schutz vor Konversionsbehandlungen",
+					"url": "https://www.gesetze-im-internet.de/konvbehschg/",
+					"kind": "primary-law"
+				}
+			],
+			"since": "2020",
+			"verifiedAt": "2026-11-01"
+		},
+		"asylum": {
+			"status": "partial",
+			"summary": "Claims based on sexual orientation or gender identity are assessed as membership of a particular social group. The EU qualification rules apply directly in Germany.",
+			"sources": [
+				{
+					"label": "Regulation (EU) 2024/1347, art. 10 (EUR-Lex)",
+					"url": "https://eur-lex.europa.eu/eli/reg/2024/1347/oj/eng",
+					"kind": "primary-law"
+				},
+				{
+					"label": "Asylgesetz (AsylG)",
+					"url": "https://www.gesetze-im-internet.de/asylvfg_1992/",
+					"kind": "primary-law"
+				}
+			],
+			"verifiedAt": "2026-11-01"
+		}
+	}
+}

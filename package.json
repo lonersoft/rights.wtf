@@ -30,7 +30,8 @@
     "@tailwindcss/vite": "^4.3.3",
     "astro": "7.4.4",
     "tailwindcss": "^4.3.3",
-    "typescript": "7.0.2"
+    "typescript": "7.0.2",
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "wrangler": "4.156.0"
@@ -44,6 +45,9 @@
     "astro": "astro",
     "build": "astro build",
     "cf-typegen": "wrangler types",
+    "audit:content": "node scripts/audit.mjs",
+    "check:sources": "node scripts/check-sources.mjs",
+    "new:jurisdiction": "node scripts/new-jurisdiction.mjs",
     "check": "astro build && tsc && wrangler deploy --dry-run",
     "deploy": "wrangler deploy",
     "dev": "astro dev",

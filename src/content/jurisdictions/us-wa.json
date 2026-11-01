@@ -1,0 +1,74 @@
+{
+	"code": "us-wa",
+	"name": "Washington (US)",
+	"parent": "us",
+	"region": "Americas",
+	"verification": "imported",
+	"updatedAt": "2026-11-01",
+	"helplines": [
+		{
+			"name": "Trevor Project",
+			"contact": "866-488-7386",
+			"url": "https://www.thetrevorproject.org"
+		}
+	],
+	"topics": {
+		"decriminalization": {
+			"status": "protected",
+			"summary": "Decriminalized.",
+			"sources": [
+				{
+					"label": "ILGA World",
+					"url": "https://ilga.org/",
+					"kind": "monitor"
+				}
+			],
+			"since": "1975"
+		},
+		"marriage": {
+			"status": "protected",
+			"summary": "Marriage equality.",
+			"sources": [
+				{
+					"label": "ILGA World",
+					"url": "https://ilga.org/",
+					"kind": "monitor"
+				}
+			],
+			"since": "2012"
+		},
+		"genderRecognition": {
+			"status": "protected",
+			"summary": "Self-ID marker change on state vital records.",
+			"sources": [
+				{
+					"label": "TGEU Trans Rights Map",
+					"url": "https://transrightsmap.tgeu.org/",
+					"kind": "monitor"
+				}
+			]
+		},
+		"conversionTherapy": {
+			"status": "protected",
+			"summary": "Ban plus shield law.",
+			"sources": [
+				{
+					"label": "ILGA World",
+					"url": "https://ilga.org/",
+					"kind": "monitor"
+				}
+			]
+		},
+		"asylum": {
+			"status": "partial",
+			"summary": "Federal asylum rules apply.",
+			"sources": [
+				{
+					"label": "ILGA World",
+					"url": "https://ilga.org/",
+					"kind": "monitor"
+				}
+			]
+		}
+	}
+}

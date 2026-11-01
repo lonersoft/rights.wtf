@@ -1,0 +1,25 @@
+---
+import type { HTMLAttributes } from "astro/types";
+import { FIELD_CLASS } from "../lib/ui";
+
+type Props = Omit<HTMLAttributes<"select">, "id"> & {
+	id: string;
+	label: string;
+};
+
+const { id, label, class: className, ...rest } = Astro.props;
+---
+
+<div class="space-y-1.5">
+	<label for={id} class="block text-xs font-semibold text-ink-muted">{label}</label>
+	<div class="relative">
+		<select id={id} class:list={[FIELD_CLASS, "cursor-pointer appearance-none pr-9", className]} {...rest}>
+			<slot />
+		</select>
+		<div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-accent" aria-hidden="true">
+			<svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+				<path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+			</svg>
+		</div>
+	</div>
+</div>

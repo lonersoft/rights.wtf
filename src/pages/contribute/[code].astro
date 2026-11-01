@@ -1,0 +1,198 @@
+---
+/**
+ * The contribution form.
+ *
+ * Server-rendered per jurisdiction so it works without a fetch and prefills
+ * with what is published today. Everything a submitter can change lives inside
+ * the five topic fieldsets — name, parent, helplines and the trust tier are
+ * not on the form and are never read from the payload.
+ */
+import Page from "../../components/Page.astro";
+import Badge from "../../components/Badge.astro";
+import Button from "../../components/Button.astro";
+import Card from "../../components/Card.astro";
+import Footer from "../../components/Footer.astro";
+import SourceRow from "../../components/SourceRow.astro";
+import { getAllJurisdictions, TOPIC_LABELS, type ResolvedJurisdiction } from "../../lib/jurisdictions";
+import { COVERAGE, STATUS_STYLE, STATUS_TEXT } from "../../lib/status";
+import { topicKeys, type TopicKey } from "../../lib/schema";
+import { FIELD_CLASS } from "../../lib/ui";
+
+export async function getStaticPaths() {
+	const all = await getAllJurisdictions();
+	return all.map((j) => ({ params: { code: j.code }, props: { j } }));
+}
+
+interface Props {
+	j: ResolvedJurisdiction;
+}
+
+const { j } = Astro.props;
+const data = j.authored;
+
+const EMPTY = { status: "unknown" as const, summary: "", since: undefined, sources: [], verifiedAt: undefined };
+
+const current = (key: TopicKey) => data?.topics[key] ?? EMPTY;
+const known = topicKeys.filter((k) => current(k).status !== "unknown").length;
+
+const STATUS_OPTIONS = ["unknown", "protected", "partial", "restricted", "criminalized"] as const;
+---
+
+<Page
+	title={`contribute: ${j.name} — rights.wtf`}
+	description={`Add or correct the legal information for ${j.name}. Every claim needs a source.`}
+	image={`/og/${j.code}.svg`}
+	width="3xl"
+>
+	<a href="/contribute" class="text-xs font-semibold text-accent hover:underline">&larr; all jurisdictions</a>
+
+	<div class="mt-4 flex flex-wrap items-baseline gap-x-3 gap-y-2">
+		<h1 class="text-3xl font-extrabold tracking-tight sm:text-4xl">{j.name}</h1>
+		<Badge tone={COVERAGE[j.coverage].tone} size="sm">{COVERAGE[j.coverage].label}</Badge>
+		<span class="text-xs text-ink-faint">{known}/5 topics written</span>
+	</div>
+
+	<p class="mt-3 max-w-2xl text-sm leading-relaxed text-ink-muted">
+		Fill in what you know. Submitting opens a <strong class="font-semibold text-ink">pull request</strong>,
+		which a maintainer reads before anything appears on the site — this form does not publish.
+		Every claim needs a source, because we would rather say nothing than guess.
+	</p>
+
+	{!data && (
+		<div class="mt-4 rounded-xl border border-line bg-accent-soft/50 p-4 text-xs leading-relaxed text-ink-muted">
+			<strong class="font-bold text-ink">this page does not exist yet.</strong> You are creating it.
+			The name and parent region come from the country list, so you only need the law.
+		</div>
+	)}
+
+	<form
+		id="contribute-form"
+		data-code={j.code}
+		data-updated-at={data?.updatedAt ?? ""}
+		novalidate
+		class="mt-8 space-y-5"
+	>
+		{
+			topicKeys.map((key) => {
+				const t = current(key);
+				return (
+					<fieldset class="rounded-2xl border border-line bg-surface p-5" data-topic={key}>
+						<legend class="px-1.5 text-sm font-bold text-ink">{TOPIC_LABELS[key]}</legend>
+						<p class="mt-1 text-[11px] text-ink-faint">
+							currently{" "}
+							<span class:list={["font-bold", STATUS_STYLE[t.status].text]}>
+								{STATUS_TEXT[t.status]}
+							</span>
+							{t.verifiedAt && <span> · checked by a maintainer {t.verifiedAt}</span>}
+						</p>
+
+						<div class="mt-4 grid gap-3 sm:grid-cols-2">
+							<label class="block">
+								<span class="mb-1.5 block text-xs font-semibold text-ink-muted">status</span>
+								<select data-field="status" class:list={[FIELD_CLASS, "cursor-pointer"]}>
+									{STATUS_OPTIONS.map((s) => (
+										<option value={s} selected={t.status === s}>{STATUS_TEXT[s]}</option>
+									))}
+								</select>
+							</label>
+							<label class="block">
+								<span class="mb-1.5 block text-xs font-semibold text-ink-muted">since (optional)</span>
+								<input
+									data-field="since"
+									value={t.since ?? ""}
+									placeholder="e.g. 2021"
+									class={FIELD_CLASS}
+								/>
+							</label>
+						</div>
+
+						<label class="mt-3 block">
+							<span class="mb-1.5 block text-xs font-semibold text-ink-muted">
+								what the law says, in plain language
+							</span>
+							<textarea
+								data-field="summary"
+								rows="3"
+								placeholder="One or two sentences. No jargon, no hedging."
+								class:list={[FIELD_CLASS, "resize-y leading-relaxed"]}
+							>{t.summary}</textarea>
+						</label>
+
+						<div class="mt-4">
+							<div class="mb-2 flex flex-wrap items-baseline justify-between gap-2">
+								<span class="text-xs font-semibold text-ink-muted">sources</span>
+								<span class="text-[11px] text-ink-faint">
+									any status other than "not verified yet" needs at least one
+								</span>
+							</div>
+							<div data-sources class="space-y-2">
+								{t.sources.map((s) => <SourceRow label={s.label} url={s.url} kind={s.kind} />)}
+							</div>
+							<button
+								type="button"
+								data-add-source
+								class="mt-2 text-xs font-bold text-accent hover:text-accent-strong hover:underline"
+							>
+								+ add a source
+							</button>
+						</div>
+
+						<p
+							data-error
+							hidden
+							class="mt-3 rounded-lg border border-bad-line bg-bad-soft px-3 py-2 text-xs font-semibold text-bad"
+						></p>
+					</fieldset>
+				);
+			})
+		}
+
+		<Card padding="lg">
+			<label class="block">
+				<span class="mb-1.5 block text-xs font-semibold text-ink-muted">
+					credit (optional)
+				</span>
+				<input
+					id="credit"
+					maxlength="80"
+					placeholder="how you want to be named, or leave blank"
+					class={FIELD_CLASS}
+				/>
+			</label>
+			<p class="mt-2 text-[11px] leading-relaxed text-ink-faint">
+				This appears in the public pull request as "claimed, unverified". We cannot confirm who
+				you are and we do not try — submissions are anonymous unless you choose otherwise.
+			</p>
+
+			<h2 class="mt-6 text-sm font-bold text-ink">what we will send</h2>
+			<p id="form-status" class="mt-1 text-xs text-ink-faint" role="status">checking…</p>
+			<pre
+				id="json-preview"
+				class="mt-3 max-h-64 overflow-auto rounded-xl border border-line bg-surface-sunk p-3 text-[11px] leading-relaxed text-ink-muted"
+			></pre>
+
+			<div class="mt-4 flex flex-wrap items-center gap-2">
+				<Button type="submit" id="submit-btn" disabled class="disabled:cursor-not-allowed disabled:opacity-50">
+					open pull request
+				</Button>
+				<Button type="button" variant="outline" id="copy-json">copy json</Button>
+				<span id="submit-note" class="text-[11px] text-ink-faint"></span>
+			</div>
+
+			<p class="mt-4 text-[11px] leading-relaxed text-ink-faint">
+				Not legal advice, and we are not your lawyers. By submitting you confirm you have read
+				the sources you are linking.
+			</p>
+		</Card>
+	</form>
+
+	<template id="source-row-template">
+		<SourceRow />
+	</template>
+
+	<Footer slot="footer" />
+</Page>
+
+<script>
+	import "../../scripts/contribute";
+</script>

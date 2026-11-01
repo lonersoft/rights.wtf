@@ -1,0 +1,42 @@
+---
+/**
+ * Page shell: <html> head, header, main container, optional footer.
+ *
+ * Replaces three copies of the same min-height/header/max-width block. The
+ * `width` prop is the only thing that ever differed between pages.
+ */
+import Layout from "../layouts/Layout.astro";
+import Header from "./Header.astro";
+
+type Props = {
+	title?: string;
+	description?: string;
+	image?: string;
+	width?: "3xl" | "4xl" | "6xl" | "full";
+};
+
+const { title, description, image, width = "4xl" } = Astro.props;
+
+const WIDTHS = {
+	"3xl": "max-w-3xl px-4 py-8 sm:px-6 sm:py-12 mx-auto",
+	"4xl": "max-w-4xl px-4 py-8 sm:px-6 sm:py-12 mx-auto",
+	"6xl": "max-w-6xl px-4 py-8 sm:px-6 sm:py-12 mx-auto",
+	"full": "w-full p-0 max-w-none flex flex-col flex-1 min-h-0 lg:h-[calc(100dvh-3.5rem)] sm:lg:h-[calc(100dvh-4rem)] lg:overflow-hidden",
+} as const;
+---
+
+<Layout title={title} description={description} image={image}>
+	<div
+		class:list={[
+			"relative flex min-h-[100dvh] flex-col overflow-x-hidden bg-surface text-ink selection:bg-accent-soft-2 selection:text-accent-ink",
+			width === "full" ? "lg:h-screen lg:overflow-hidden" : "",
+		]}
+	>
+		<slot name="wash" />
+		<Header />
+		<main class:list={["w-full flex-1", WIDTHS[width]]}>
+			<slot />
+		</main>
+		<slot name="footer" />
+	</div>
+</Layout>

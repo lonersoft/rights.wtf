@@ -1,0 +1,105 @@
+{
+	"code": "gb",
+	"name": "United Kingdom",
+	"parent": null,
+	"region": "Europe",
+	"verification": "verified",
+	"updatedAt": "2026-11-01",
+	"helplines": [
+		{
+			"name": "Switchboard LGBT+",
+			"contact": "0800 0119 100",
+			"url": "https://switchboard.lgbt"
+		}
+	],
+	"topics": {
+		"decriminalization": {
+			"status": "protected",
+			"summary": "Decriminalised in stages: England and Wales in 1967, Scotland in 1980, Northern Ireland in 1982. The age of consent is now 16 for everyone.",
+			"sources": [
+				{
+					"label": "Sexual Offences Act 1967",
+					"url": "https://www.legislation.gov.uk/ukpga/1967/60",
+					"kind": "primary-law"
+				},
+				{
+					"label": "Criminal Justice (Scotland) Act 1980",
+					"url": "https://www.legislation.gov.uk/ukpga/1980/62",
+					"kind": "primary-law"
+				},
+				{
+					"label": "Homosexual Offences (Northern Ireland) Order 1982",
+					"url": "https://www.legislation.gov.uk/nisi/1982/1536",
+					"kind": "primary-law"
+				}
+			],
+			"since": "1982",
+			"verifiedAt": "2026-11-01"
+		},
+		"marriage": {
+			"status": "protected",
+			"summary": "Civil marriage is open to same-sex couples across the UK: England and Wales since 2013, Scotland since 2014, Northern Ireland since 2020. Religious bodies can refuse to conduct same-sex marriages.",
+			"sources": [
+				{
+					"label": "Marriage (Same Sex Couples) Act 2013",
+					"url": "https://www.legislation.gov.uk/ukpga/2013/30",
+					"kind": "primary-law"
+				},
+				{
+					"label": "Marriage and Civil Partnership (Scotland) Act 2014",
+					"url": "https://www.legislation.gov.uk/asp/2014/5",
+					"kind": "primary-law"
+				},
+				{
+					"label": "Marriage (Same-sex Couples) and Civil Partnership (Opposite-sex Couples) (Northern Ireland) Regulations 2019",
+					"url": "https://www.legislation.gov.uk/uksi/2019/1514",
+					"kind": "primary-law"
+				}
+			],
+			"since": "2020",
+			"verifiedAt": "2026-11-01"
+		},
+		"genderRecognition": {
+			"status": "partial",
+			"summary": "A gender recognition certificate requires an application to the Gender Recognition Panel with medical evidence — a diagnosis of gender dysphoria and reports from two doctors — plus, normally, two years living in the acquired gender. Scotland's 2022 self-ID law was blocked by the UK government before it could take effect.",
+			"sources": [
+				{
+					"label": "Gender Recognition Act 2004",
+					"url": "https://www.legislation.gov.uk/ukpga/2004/7",
+					"kind": "primary-law"
+				},
+				{
+					"label": "Gender Recognition Reform (Scotland) Bill (Prohibition on Submission for Royal Assent) Order 2023",
+					"url": "https://www.legislation.gov.uk/uksi/2023/41",
+					"kind": "primary-law"
+				}
+			],
+			"since": "2004",
+			"verifiedAt": "2026-11-01"
+		},
+		"conversionTherapy": {
+			"status": "restricted",
+			"summary": "No ban is in force. A draft Conversion Practices Bill covering England and Wales was published in June 2026 and is still in pre-legislative scrutiny — it is not law.",
+			"sources": [
+				{
+					"label": "Draft Conversion Practices Bill (GOV.UK)",
+					"url": "https://www.gov.uk/government/publications/draft-conversion-practices-bill",
+					"kind": "government"
+				}
+			],
+			"verifiedAt": "2026-11-01"
+		},
+		"asylum": {
+			"status": "partial",
+			"summary": "Claims can be based on sexual orientation or gender identity as membership of a particular social group. The 2006 Qualification Regulations set out the refugee definition applied in UK law.",
+			"sources": [
+				{
+					"label": "Refugee or Person in Need of International Protection (Qualification) Regulations 2006",
+					"url": "https://www.legislation.gov.uk/uksi/2006/2525",
+					"kind": "primary-law"
+				}
+			],
+			"verifiedAt": "2026-11-01"
+		}
+	}
+}

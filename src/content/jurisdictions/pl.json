@@ -1,0 +1,78 @@
+{
+	"code": "pl",
+	"name": "Poland",
+	"parent": null,
+	"region": "Europe",
+	"verification": "verified",
+	"updatedAt": "2026-11-01",
+	"helplines": [
+		{
+			"name": "Lambda Warszawa",
+			"contact": "+48 22 628 52 22",
+			"url": "https://lambdawarszawa.org"
+		}
+	],
+	"topics": {
+		"decriminalization": {
+			"status": "protected",
+			"summary": "Consensual same-sex sexual activity has been legal since the entry into force of the 1932 Criminal Code.",
+			"since": "1932",
+			"verifiedAt": "2026-11-01",
+			"sources": [
+				{
+					"label": "Rozporządzenie Prezydenta RP z 11 lipca 1932 r. — Kodeks karny (Dz.U. 1932 nr 60 poz. 571)",
+					"url": "https://isap.sejm.gov.pl/isap.nsf/DocDetails.xsp?id=WDU19320600571",
+					"kind": "primary-law"
+				}
+			]
+		},
+		"marriage": {
+			"status": "restricted",
+			"summary": "Article 18 of the Constitution defines marriage as between a man and a woman; neither same-sex marriage nor registered partnerships are legally recognized.",
+			"verifiedAt": "2026-11-01",
+			"sources": [
+				{
+					"label": "Konstytucja Rzeczypospolitej Polskiej z 2 kwietnia 1997 r., art. 18 (Dz.U. 1997 nr 78 poz. 483)",
+					"url": "https://isap.sejm.gov.pl/isap.nsf/DocDetails.xsp?id=WDU19970780483",
+					"kind": "primary-law"
+				}
+			]
+		},
+		"genderRecognition": {
+			"status": "restricted",
+			"summary": "Legal gender recognition requires filing an adversarial civil lawsuit under Article 189 k.p.c. against one's parents or a court-appointed curator.",
+			"verifiedAt": "2026-11-01",
+			"sources": [
+				{
+					"label": "Sąd Najwyższy, uchwała z 22 września 1995 r. (III CZP 118/95, OSNC 1996/1/7)",
+					"url": "https://isap.sejm.gov.pl/isap.nsf/DocDetails.xsp?id=WDU19640430296",
+					"kind": "court-ruling"
+				}
+			]
+		},
+		"conversionTherapy": {
+			"status": "restricted",
+			"summary": "No statutory prohibition exists banning conversion practices on minors or adults.",
+			"verifiedAt": "2026-11-01",
+			"sources": [
+				{
+					"label": "Rzecznik Praw Obywatelskich — Praktyki konwersyjne w Polsce",
+					"url": "https://bip.brpo.gov.pl/pl/kategoria-tematyczna/prawa-osob-lgbt",
+					"kind": "government"
+				}
+			]
+		},
+		"asylum": {
+			"status": "partial",
+			"summary": "Persecution on grounds of sexual orientation or gender identity is recognized as grounds for international protection under refugee status legislation transposing EU law.",
+			"verifiedAt": "2026-11-01",
+			"sources": [
+				{
+					"label": "Ustawa o udzielaniu cudzoziemcom ochrony na terytorium RP, art. 13 (Dz.U. 2003 nr 128 poz. 1175)",
+					"url": "https://isap.sejm.gov.pl/isap.nsf/DocDetails.xsp?id=WDU20031281175",
+					"kind": "primary-law"
+				}
+			]
+		}
+	}
+}

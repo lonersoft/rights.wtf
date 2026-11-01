@@ -1,0 +1,91 @@
+{
+	"code": "fr",
+	"name": "France",
+	"parent": null,
+	"region": "Europe",
+	"verification": "verified",
+	"updatedAt": "2026-11-01",
+	"helplines": [
+		{
+			"name": "SOS Homophobie",
+			"contact": "01 48 06 42 41",
+			"url": "https://www.sos-homophobie.org"
+		},
+		{
+			"name": "Le Refuge",
+			"contact": "06 31 59 69 50",
+			"url": "https://le-refuge.org"
+		}
+	],
+	"topics": {
+		"decriminalization": {
+			"status": "protected",
+			"summary": "Sodomy was dropped from the penal code in 1791 and sex between adults is not a specific offence. Public-indecency and age-of-consent rules apply to everyone.",
+			"sources": [
+				{
+					"label": "Code pénal du 25 septembre 1791 (Gallica, BnF)",
+					"url": "https://gallica.bnf.fr/ark:/12148/bpt6k6532512s",
+					"kind": "primary-law"
+				}
+			],
+			"since": "1791",
+			"verifiedAt": "2026-11-01"
+		},
+		"marriage": {
+			"status": "protected",
+			"summary": "Civil marriage and joint adoption are open to same-sex couples under the 2013 \"mariage pour tous\" law.",
+			"sources": [
+				{
+					"label": "Loi n° 2013-404 du 17 mai 2013 (Légifrance)",
+					"url": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000027414540",
+					"kind": "primary-law"
+				}
+			],
+			"since": "2013",
+			"verifiedAt": "2026-11-01"
+		},
+		"genderRecognition": {
+			"status": "partial",
+			"summary": "Changing the sex marker on civil records goes through the tribunal judiciaire. Since 2016 no medical treatment, surgery or sterilisation can be required, but it is still a court procedure.",
+			"sources": [
+				{
+					"label": "Loi n° 2016-1547, art. 56 (civil code arts. 61-5 to 61-8, Légifrance)",
+					"url": "https://www.legifrance.gouv.fr/loda/article_lc/JORFARTI000033418904",
+					"kind": "primary-law"
+				}
+			],
+			"since": "2016",
+			"verifiedAt": "2026-11-01"
+		},
+		"conversionTherapy": {
+			"status": "protected",
+			"summary": "Practices aimed at changing or suppressing someone's sexual orientation or gender identity are a criminal offence (penal code art. 225-4-13), with higher penalties where the victim is a minor.",
+			"sources": [
+				{
+					"label": "Loi n° 2022-92 du 31 janvier 2022 (dossier législatif, Sénat)",
+					"url": "https://www.senat.fr/dossier-legislatif/ppl21-013.html",
+					"kind": "government"
+				}
+			],
+			"since": "2022",
+			"verifiedAt": "2026-11-01"
+		},
+		"asylum": {
+			"status": "partial",
+			"summary": "Claims based on sexual orientation or gender identity are assessed as membership of a particular social group. The EU qualification rules apply directly in France.",
+			"sources": [
+				{
+					"label": "Regulation (EU) 2024/1347, art. 10 (EUR-Lex)",
+					"url": "https://eur-lex.europa.eu/eli/reg/2024/1347/oj/eng",
+					"kind": "primary-law"
+				},
+				{
+					"label": "OFPRA — orientation sexuelle et identité de genre",
+					"url": "https://www.ofpra.gouv.fr/publications/les-focus",
+					"kind": "government"
+				}
+			],
+			"verifiedAt": "2026-11-01"
+		}
+	}
+}

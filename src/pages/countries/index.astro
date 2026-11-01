@@ -1,0 +1,141 @@
+---
+import Page from "../../components/Page.astro";
+import Badge from "../../components/Badge.astro";
+import Input from "../../components/Input.astro";
+import AtlasLayout from "../../components/AtlasLayout.astro";
+import { getAllJurisdictions, knownTopicCount } from "../../lib/jurisdictions";
+import { COVERAGE } from "../../lib/status";
+
+const all = await getAllJurisdictions();
+
+const order = { verified: 0, imported: 1, submitted: 2, partial: 3, stub: 4 } as const;
+const sorted = [...all].sort(
+	(a, b) => order[a.coverage] - order[b.coverage] || a.name.localeCompare(b.name),
+);
+
+const covered = sorted.filter((j) => j.coverage !== "stub");
+const stubs = sorted.filter((j) => j.coverage === "stub");
+
+const counts = {
+	verified: all.filter((j) => j.coverage === "verified").length,
+	imported: all.filter((j) => j.coverage === "imported").length,
+	submitted: all.filter((j) => j.coverage === "submitted").length,
+	partial: all.filter((j) => j.coverage === "partial").length,
+	stub: stubs.length,
+};
+---
+
+<Page
+	title="country info — rights.wtf"
+	description="Legal reality for queer people, jurisdiction by jurisdiction. Sourced, plain language, honest about what we have not verified yet."
+	width="full"
+>
+	<AtlasLayout jurisdictions={all}>
+		<a href="/" class="text-xs font-semibold text-accent hover:underline">&larr; home</a>
+
+		<h1 class="mt-4 text-3xl font-extrabold tracking-tight sm:text-4xl">country info</h1>
+		<p class="mt-2 max-w-2xl text-sm leading-relaxed text-ink-muted">
+			Every jurisdiction gets a page. Some are checked against primary law, some are imported
+			from monitors, and most are still blank on purpose — we would rather say
+			<span class="font-semibold text-ink">"not verified yet"</span> than guess.
+		</p>
+
+		<div class="mt-5 flex flex-wrap gap-2 text-[11px] font-semibold">
+			<Badge tone="ok" size="md">{counts.verified} verified</Badge>
+			<Badge tone="warn" size="md">{counts.imported} imported</Badge>
+			<Badge tone="accent" size="md">{counts.submitted} submitted</Badge>
+			<Badge tone="info" size="md">{counts.partial} partial</Badge>
+			<Badge tone="neutral" size="md">{counts.stub} not verified</Badge>
+		</div>
+
+		<!-- Mobile Only: In-page filter and list (Desktop uses the sticky left Atlas sidebar) -->
+		<div class="lg:hidden mt-6">
+			<Input
+				id="jurisdiction-filter"
+				type="search"
+				placeholder="filter by name…"
+				label="Filter jurisdictions"
+				hideLabel
+			/>
+		</div>
+
+		<section class="lg:hidden mt-8" aria-labelledby="covered-heading">
+			<h2 id="covered-heading" class="text-lg font-bold">written up ({covered.length})</h2>
+			<ul class="mt-3 grid gap-2 sm:grid-cols-2">
+				{covered.map((j) => (
+					<li data-name={j.name.toLowerCase()}>
+						<a
+							href={`/country/${j.code}`}
+							class="flex items-center justify-between gap-3 rounded-xl border border-line bg-surface px-4 py-3 transition-colors hover:border-line-strong"
+						>
+							<span class="text-sm font-semibold text-ink">{j.name}</span>
+							<Badge tone={COVERAGE[j.coverage].tone} size="xs" class="shrink-0">
+								{j.authored ? `${knownTopicCount(j.authored)}/5` : "0/5"}
+							</Badge>
+						</a>
+					</li>
+				))}
+			</ul>
+		</section>
+
+		<details class="lg:hidden mt-8 rounded-2xl border border-line bg-surface p-5">
+			<summary class="cursor-pointer text-lg font-bold text-ink">
+				not verified yet ({stubs.length}) — help us fill these in
+			</summary>
+			<p class="mt-2 text-xs leading-relaxed text-ink-faint">
+				These pages exist so nobody hits a dead end, but they only have a global helpline.
+				If you know one of these countries, send us the law and a source.
+			</p>
+			<ul class="mt-4 grid gap-1.5 sm:grid-cols-3">
+				{stubs.map((j) => (
+					<li data-name={j.name.toLowerCase()}>
+						<a href={`/country/${j.code}`} class="text-xs text-ink-muted hover:text-accent hover:underline">
+							{j.name}
+						</a>
+					</li>
+				))}
+			</ul>
+		</details>
+
+		<!-- Desktop Only Right Pane: Featured Verified Guides -->
+		<div class="hidden lg:block mt-8 space-y-6">
+			<div class="rounded-2xl border border-line bg-accent-soft/30 p-5">
+				<h2 class="text-sm font-bold text-ink">← Select any jurisdiction from the atlas</h2>
+				<p class="mt-1 text-xs text-ink-muted">
+					Browse the persistent sidebar on the left or search across all 285 countries to view their full legal field guide.
+				</p>
+			</div>
+
+			<div>
+				<h2 class="text-base font-bold text-ink">Checked against primary law ({counts.verified})</h2>
+				<p class="mt-1 text-xs text-ink-faint">Each of these has been verified against official statutes, court decisions, and decrees.</p>
+				<div class="mt-3 grid grid-cols-2 gap-3">
+					{all.filter(j => j.coverage === "verified").map(v => (
+						<a
+							href={`/country/${v.code}`}
+							class="rounded-xl border border-line bg-surface p-4 transition-colors hover:border-line-strong hover:bg-accent-soft/20 flex flex-col justify-between"
+						>
+							<div class="flex items-center justify-between gap-2">
+								<span class="text-sm font-bold text-ink">{v.name}</span>
+								<Badge tone="ok" size="xs">verified</Badge>
+							</div>
+							<span class="mt-2 text-[11px] text-accent font-semibold">read field guide &rarr;</span>
+						</a>
+					))}
+				</div>
+			</div>
+		</div>
+	</AtlasLayout>
+</Page>
+
+<script>
+	const input = document.getElementById("jurisdiction-filter") as HTMLInputElement | null;
+	if (input) {
+		input.addEventListener("input", () => {
+			const q = input.value.trim().toLowerCase();
+			document.querySelectorAll<HTMLElement>("[data-name]").forEach((el) => {
+				el.hidden = q.length > 0 && !(el.dataset.name ?? "").includes(q);
+			});
+		});
+	}
+</script>

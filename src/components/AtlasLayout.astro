@@ -1,0 +1,205 @@
+---
+/**
+ * Desktop Atlas Layout: split-pane reference guide.
+ *
+ * Left pane: sticky, searchable directory of all 285 jurisdictions with
+ * live filtering and instant active highlighting.
+ *
+ * Right pane: clean, focused reading column for the selected jurisdiction.
+ *
+ * On mobile (< lg): hides the sidebar so single-column reading is preserved.
+ */
+import { COVERAGE } from "../lib/status";
+import { knownTopicCount, type ResolvedJurisdiction } from "../lib/jurisdictions";
+import Badge from "./Badge.astro";
+import Footer from "./Footer.astro";
+
+interface Props {
+	currentCode?: string;
+	jurisdictions: ResolvedJurisdiction[];
+}
+
+const { currentCode, jurisdictions } = Astro.props;
+
+// Sort: verified first, then imported, submitted, partial, stubs, alphabetical
+const order = { verified: 0, imported: 1, submitted: 2, partial: 3, stub: 4 } as const;
+const sorted = [...jurisdictions].sort(
+	(a, b) => order[a.coverage] - order[b.coverage] || a.name.localeCompare(b.name),
+);
+
+const counts = {
+	total: jurisdictions.length,
+	verified: jurisdictions.filter((j) => j.coverage === "verified").length,
+	imported: jurisdictions.filter((j) => j.coverage === "imported").length,
+	submitted: jurisdictions.filter((j) => j.coverage === "submitted").length,
+	stubs: jurisdictions.filter((j) => j.coverage === "stub").length,
+};
+---
+
+<div class="flex flex-col lg:flex-row w-full flex-1 min-h-0 lg:h-full lg:overflow-hidden">
+	<!-- Left Atlas Sidebar (Desktop lg+) -->
+	<aside
+		id="atlas-sidebar"
+		class="hidden lg:flex w-80 xl:w-96 shrink-0 flex-col border-r border-line bg-surface/50 h-full min-h-0 z-20"
+		aria-label="Jurisdictions Atlas"
+	>
+		<!-- Search & Filter Controls -->
+		<div class="p-3.5 border-b border-line bg-surface/80 backdrop-blur-sm space-y-2.5 shrink-0">
+			<div class="relative">
+				<input
+					id="atlas-search-input"
+					type="search"
+					placeholder="filter 285 jurisdictions…"
+					aria-label="Filter jurisdictions in atlas"
+					class="w-full rounded-xl border border-line-strong bg-accent-soft/30 px-3 py-1.5 pl-8 text-xs text-ink transition-colors focus:border-accent focus:bg-surface focus:outline-none focus:ring-2 focus:ring-accent-soft-2"
+				/>
+				<svg
+					class="absolute left-2.5 top-2.5 h-3.5 w-3.5 text-ink-faint pointer-events-none"
+					viewBox="0 0 24 24"
+					fill="none"
+					stroke="currentColor"
+					stroke-width="2"
+					aria-hidden="true"
+				>
+					<circle cx="11" cy="11" r="8"></circle>
+					<line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+				</svg>
+			</div>
+
+			<!-- Filter Pills -->
+			<div class="flex flex-wrap items-center gap-1.5 text-[10px] font-semibold" id="atlas-filter-pills">
+				<button
+					type="button"
+					data-filter="all"
+					class="atlas-pill active rounded-md border border-line-strong bg-ink text-surface px-2 py-0.5 transition-colors"
+				>
+					all ({counts.total})
+				</button>
+				<button
+					type="button"
+					data-filter="verified"
+					class="atlas-pill rounded-md border border-line bg-surface px-2 py-0.5 text-ink-muted hover:border-line-strong hover:text-ink transition-colors"
+				>
+					verified ({counts.verified})
+				</button>
+				<button
+					type="button"
+					data-filter="imported"
+					class="atlas-pill rounded-md border border-line bg-surface px-2 py-0.5 text-ink-muted hover:border-line-strong hover:text-ink transition-colors"
+				>
+					imported ({counts.imported})
+				</button>
+			</div>
+		</div>
+
+		<!-- Jurisdictions List -->
+		<nav class="flex-1 min-h-0 overflow-y-auto divide-y divide-line/30 overscroll-contain" id="atlas-list" tabindex="-1">
+			{
+				sorted.map((j) => {
+					const isActive = j.code === currentCode;
+					const cov = COVERAGE[j.coverage];
+					return (
+						<a
+							href={`/country/${j.code}`}
+							data-code={j.code}
+							data-name={j.name.toLowerCase()}
+							data-coverage={j.coverage}
+							class:list={[
+								"atlas-item flex items-center justify-between gap-2 px-4 py-2.5 text-xs transition-colors no-underline",
+								isActive
+									? "active bg-accent-soft text-accent-ink font-bold border-l-3 border-accent"
+									: "text-ink hover:bg-accent-soft/30 font-medium",
+							]}
+						>
+							<span class="truncate">{j.name}</span>
+							<div class="flex shrink-0 items-center gap-1.5">
+								<Badge tone={cov.tone} size="xs">
+									{cov.short}
+								</Badge>
+								{j.authored && (
+									<span class="text-[10px] text-ink-faint">
+										{knownTopicCount(j.authored)}/5
+									</span>
+								)}
+							</div>
+						</a>
+					);
+				})
+			}
+		</nav>
+
+		<!-- Footer count -->
+		<div class="p-2.5 border-t border-line bg-surface text-[11px] text-ink-faint flex items-center justify-between shrink-0">
+			<span id="atlas-visible-count">{sorted.length} displayed</span>
+			<a href="/contribute" class="text-accent hover:underline font-semibold">+ add missing</a>
+		</div>
+	</aside>
+
+	<!-- Right Reading Pane -->
+	<main class="flex-1 min-w-0 w-full lg:h-full lg:overflow-y-auto lg:overscroll-contain flex flex-col justify-between">
+		<div class="mx-auto w-full max-w-3xl px-4 py-6 sm:px-8 sm:py-10">
+			<slot />
+		</div>
+		<Footer />
+	</main>
+</div>
+
+<script>
+	const searchInput = document.getElementById("atlas-search-input") as HTMLInputElement | null;
+	const list = document.getElementById("atlas-list");
+	const items = list ? Array.from(list.querySelectorAll<HTMLAnchorElement>(".atlas-item")) : [];
+	const countEl = document.getElementById("atlas-visible-count");
+	const pills = document.querySelectorAll<HTMLButtonElement>(".atlas-pill");
+
+	let currentFilter = "all";
+	let searchQuery = "";
+
+	function updateFilter() {
+		let visible = 0;
+		for (const item of items) {
+			const name = item.dataset.name || "";
+			const cov = item.dataset.coverage || "";
+
+			const matchesQuery = !searchQuery || name.includes(searchQuery);
+			const matchesPill =
+				currentFilter === "all" ||
+				(currentFilter === "verified" && cov === "verified") ||
+				(currentFilter === "imported" && cov === "imported");
+
+			const show = matchesQuery && matchesPill;
+			item.style.display = show ? "flex" : "none";
+			if (show) visible++;
+		}
+
+		if (countEl) {
+			countEl.textContent = `${visible} displayed`;
+		}
+	}
+
+	if (searchInput) {
+		searchInput.addEventListener("input", () => {
+			searchQuery = searchInput.value.trim().toLowerCase();
+			updateFilter();
+		});
+	}
+
+	for (const pill of pills) {
+		pill.addEventListener("click", () => {
+			for (const p of pills) {
+				p.classList.remove("active", "bg-ink", "text-surface", "border-line-strong");
+				p.classList.add("bg-surface", "text-ink-muted", "border-line");
+			}
+			pill.classList.add("active", "bg-ink", "text-surface", "border-line-strong");
+			pill.classList.remove("bg-surface", "text-ink-muted", "border-line");
+
+			currentFilter = pill.dataset.filter || "all";
+			updateFilter();
+		});
+	}
+
+	// Scroll active item into view on load
+	const activeItem = list?.querySelector<HTMLAnchorElement>(".atlas-item.active");
+	if (activeItem) {
+		activeItem.scrollIntoView({ block: "nearest" });
+	}
+</script>

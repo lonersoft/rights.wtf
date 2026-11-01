@@ -1,0 +1,76 @@
+---
+/**
+ * One button, five intents. Renders <a> when `href` is set, <button> otherwise,
+ * so a link is never a fake button and a button is never a fake link.
+ *
+ * `danger` is the only variant that is allowed to use a raw red; it exists for
+ * the Quick exit and nothing else.
+ */
+type Variant = "primary" | "danger" | "accent" | "outline" | "ghost";
+type Size = "xs" | "sm" | "md";
+
+type Props = {
+	href?: string;
+	variant?: Variant;
+	size?: Size;
+	shape?: "rounded" | "pill";
+	type?: "button" | "submit" | "reset";
+	class?: string;
+	[key: string]: unknown;
+};
+
+const {
+	href,
+	variant = "primary",
+	size = "sm",
+	shape = "rounded",
+	type = "button",
+	class: className,
+	...rest
+} = Astro.props;
+
+const VARIANTS: Record<Variant, string> = {
+	primary:
+		"bg-ink text-surface shadow-sm hover:bg-accent hover:text-on-accent focus-visible:ring-accent",
+	danger:
+		"bg-danger text-white hover:bg-danger-strong focus-visible:ring-danger",
+	accent:
+		"bg-accent text-on-accent hover:bg-accent-strong focus-visible:ring-accent",
+	outline:
+		"border border-line text-ink-muted hover:border-line-strong hover:text-accent focus-visible:ring-accent",
+	ghost:
+		"text-accent hover:text-accent-strong hover:underline focus-visible:ring-accent",
+};
+
+/**
+ * Sizes own padding and type scale. Callers must not add px/py/text utilities,
+ * because Tailwind resolves conflicts by stylesheet order, not class order.
+ * Responsive variants (sm:px-3) are safe and are the only overrides allowed.
+ */
+const SIZES: Record<Size, string> = {
+	xs: "px-2.5 py-1.5 text-xs",
+	sm: "px-3 py-1.5 text-xs",
+	md: "px-4 py-1.5 text-sm",
+};
+
+const classes = [
+	"inline-flex items-center justify-center gap-1.5 font-semibold whitespace-nowrap transition-colors",
+	"focus-visible:outline-none focus-visible:ring-2",
+	shape === "pill" ? "rounded-full" : "rounded-md",
+	VARIANTS[variant],
+	SIZES[size],
+	className,
+];
+---
+
+{
+	href ? (
+		<a href={href} class:list={classes} {...rest}>
+			<slot />
+		</a>
+	) : (
+		<button type={type} class:list={classes} {...rest}>
+			<slot />
+		</button>
+	)
+}

@@ -1,4 +1,131 @@
-/* Full Tailwind import (theme + preflight + utilities).
-   The old Bear-Blog theme is gone — the site is the basics
-   boilerplate now, and its leftover globals were polluting it. */
+/* Full Tailwind import (theme + preflight + utilities). */
 @import "tailwindcss";
+
+/* The dark variant follows an explicit attribute, not the OS media query.
+   The attribute is set before first paint by the inline script in Layout.astro,
+   so there is never a flash of the wrong theme. */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/* Semantic tokens. Nothing in the markup should name a raw hue.
+   Light values keep the existing warm-pink editorial look. */
+@theme {
+	--color-surface: #ffffff;
+	--color-surface-raised: #ffffff;
+	--color-surface-sunk: #fff7fa;
+
+	--color-ink: #18181b;
+	--color-ink-muted: #52525b;
+	--color-ink-faint: #71717a;
+
+	--color-line: #fce7f0;
+	--color-line-strong: #fbcfe8;
+
+	--color-accent: #db2777;
+	--color-accent-strong: #be185d;
+	--color-accent-ink: #9d174d;
+	--color-accent-soft: #fdf2f8;
+	--color-accent-soft-2: #fce7f3;
+	--color-on-accent: #ffffff;
+
+	--color-danger: #b91c1c;
+	--color-danger-strong: #991b1b;
+
+	--color-ok: #047857;
+	--color-ok-soft: #ecfdf5;
+	--color-ok-line: #a7f3d0;
+	--color-ok-dot: #10b981;
+
+	--color-warn: #b45309;
+	--color-warn-soft: #fffbeb;
+	--color-warn-line: #fde68a;
+	--color-warn-dot: #f59e0b;
+
+	--color-bad: #be123c;
+	--color-bad-soft: #fff1f2;
+	--color-bad-line: #fecdd3;
+	--color-bad-dot: #e11d48;
+
+	--color-caution: #c2410c;
+	--color-caution-soft: #fff7ed;
+	--color-caution-line: #fed7aa;
+	--color-caution-dot: #f97316;
+
+	--color-info: #0369a1;
+	--color-info-soft: #f0f9ff;
+	--color-info-line: #bae6fd;
+	--color-info-dot: #0ea5e9;
+}
+
+:root {
+	color-scheme: light;
+	--wash: #fff1f5;
+}
+
+/* Warm charcoal, not blue-black. Keeps the page feeling like paper at night. */
+html[data-theme="dark"] {
+	color-scheme: dark;
+	--wash: #2a1b22;
+
+	--color-surface: #14100f;
+	--color-surface-raised: #1c1817;
+	--color-surface-sunk: #201a1a;
+
+	--color-ink: #f4efec;
+	--color-ink-muted: #c9bfba;
+	--color-ink-faint: #9a908b;
+
+	--color-line: #3a2e31;
+	--color-line-strong: #4f3f44;
+
+	--color-accent: #f472b6;
+	--color-accent-strong: #f9a8d4;
+	--color-accent-ink: #fbcfe8;
+	--color-accent-soft: #251a1f;
+	--color-accent-soft-2: #33222b;
+	--color-on-accent: #2a0a16;
+
+	--color-danger: #b91c1c;
+	--color-danger-strong: #dc2626;
+
+	--color-ok: #6ee7b7;
+	--color-ok-soft: #10241c;
+	--color-ok-line: #1e4a38;
+	--color-ok-dot: #34d399;
+
+	--color-warn: #fcd34d;
+	--color-warn-soft: #2a2110;
+	--color-warn-line: #57431a;
+	--color-warn-dot: #fbbf24;
+
+	--color-bad: #fda4af;
+	--color-bad-soft: #2b1418;
+	--color-bad-line: #58272f;
+	--color-bad-dot: #fb7185;
+
+	--color-caution: #fdba74;
+	--color-caution-soft: #2a1c10;
+	--color-caution-line: #5a3a1e;
+	--color-caution-dot: #fb923c;
+
+	--color-info: #7dd3fc;
+	--color-info-soft: #0d222d;
+	--color-info-line: #1c4557;
+	--color-info-dot: #38bdf8;
+}
+
+html {
+	background-color: var(--color-surface);
+}
+
+/* Explicit, so any text that never got a utility class still uses the
+   warm ink instead of the UA's pure black/white. */
+body {
+	background-color: var(--color-surface);
+	color: var(--color-ink);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	html {
+		scroll-behavior: auto;
+	}
+}
