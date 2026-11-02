@@ -1,0 +1,320 @@
+# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
+#
+# CodeRabbit for rights.wtf — a sourced, plain-language queer legal field guide.
+#
+# Division of labour:
+#   CodeRabbit -> structure, provenance, security, accessibility, build hygiene.
+#   Hermes     -> whether a cited statute actually says what the PR claims.
+#   CI + human -> the merge gate. Nothing here can approve or merge a PR.
+#
+# CodeRabbit is deliberately told NOT to judge legal accuracy. A hallucinated
+# "verified" on a criminalisation claim is the worst failure mode for this
+# project, and a second confident AI opinion makes the reviewer trust the first.
+
+language: "en-US"
+enable_free_tier: true
+
+tone_instructions: >-
+  Plain, neutral, specific. No praise openers, no exclamation marks, no emoji.
+  Name the file and line. If something is unverified, say so rather than
+  guessing; this repo prefers "not verified yet" to a confident wrong answer.
+
+reviews:
+  profile: chill
+
+  high_level_summary: true
+  high_level_summary_instructions: |
+    For content pull requests: list each jurisdiction touched, which topics changed
+    status, and any trust-tier move (verified, imported, submitted, partial, and
+    unknown, which the site renders as "not verified"). For code pull requests:
+    state what behaviour changed and what a visitor would notice. No release-notes voice.
+
+  collapse_walkthrough: true
+  changed_files_summary: true
+  sequence_diagrams: false
+  estimate_code_review_effort: true
+  assess_linked_issues: false
+  related_issues: false
+  related_prs: true          # duplicate submissions for one jurisdiction show up here
+  suggested_labels: true
+  auto_apply_labels: false   # suggest only; a bot silently labelling contributors is rude
+  labeling_instructions:
+    # `content`, `infra` and `i18n` must exist as repository labels or these
+    # suggestions are silently dropped. CodeRabbit can only suggest static labels,
+    # so the existing `country: <name>` / `topic: <name>` taxonomy cannot be used.
+    - label: "content"
+      instructions: "Changes src/content/jurisdictions/** or src/data/helplines.json."
+    - label: "infra"
+      instructions: "Changes wrangler.json, src/pages/api/submit.ts, src/lib/github.ts, src/lib/ratelimit.ts, or .github/workflows/**."
+    - label: "accessibility"
+      instructions: "Changes focus handling, contrast, labels, keyboard behaviour or screen-reader output."
+    - label: "i18n"
+      instructions: "Adds or changes user-facing strings that will need French translation."
+  suggested_reviewers: false
+  poem: false
+  in_progress_fortune: false
+  enable_prompt_for_ai_agents: true
+  abort_on_close: true
+
+  # ---------------------------------------------------------------------------
+  # Scope: build output and generated artefacts are not reviewable diffs.
+  # ---------------------------------------------------------------------------
+  path_filters:
+    - "!dist/**"
+    - "!.astro/**"
+    - "!.wrangler/**"
+    - "!node_modules/**"
+    - "!pnpm-lock.yaml"      # osvScanner below is the correct tool for lockfile risk
+    - "!public/**"
+
+  path_instructions:
+    - path: "src/lib/schema.ts"
+      instructions: |
+        This file is the single source of the content contract. It is imported by
+        the Astro build, by the browser form at /contribute/[code], and by the
+        Cloudflare Worker in src/pages/api/submit.ts. One edit changes all three.
+
+        - Treat every change as potentially breaking for the 285 files in
+          src/content/jurisdictions. Ask for a migration or a defaulted field,
+          never a hard cut.
+        - The stored schemas use .strict(). Do not remove it, do not add
+          passthrough, do not silently strip unknown keys.
+        - Preserve the rule that a topic whose status is not "unknown" requires at
+          least one source. Never let a change make that optional.
+        - Flag any field a public submitter could now set but should not:
+          verification, verifiedAt, updatedAt, helplines, name, parent, region.
+
+    - path: "src/content/jurisdictions/**"
+      instructions: |
+        Structural and provenance review only. Do NOT judge whether the legal claim
+        is correct: a separate reviewer reads the primary source, and an incorrect
+        assertion on this site is worse than a missing one.
+
+        Flag:
+        - malformed JSON, or keys and status values outside src/lib/schema.ts;
+        - a topic that is not "unknown" with an empty sources array;
+        - duplicate source URLs, or sources that are news articles, blogs,
+          Wikipedia or advocacy pages where a statute, gazette entry or court
+          judgment is expected;
+        - a status moving to a less protective tier without the PR description
+          explaining why.
+
+        Report for maintainer attention, but do not fail the review: any change to
+        verification, verifiedAt, updatedAt, helplines, name, parent or region.
+        Those are server-controlled and must never originate from a public submission.
+
+        Do not rewrite or reword summaries. Report; a human edits.
+
+    - path: "src/data/helplines.json"
+      instructions: |
+        This is the highest-harm file in the repository: a wrong crisis number can
+        kill someone. Any change to a phone number, SMS shortcode, chat URL or hours
+        must cite the organisation's own official page in the PR description. Flag
+        any number sourced from an aggregator, directory, Wikipedia or other third
+        party. When in doubt, ask for the official page instead of approving.
+
+    - path: "src/pages/api/submit.ts"
+      instructions: |
+        Unauthenticated public endpoint. Review for:
+        - server-controlled fields (name, parent, region, helplines, verification,
+          updatedAt, verifiedAt) cannot be supplied or overridden by the request body;
+        - a byte cap is enforced before parsing, and nothing is trusted after parse;
+        - the payload is re-validated server-side with the same strict schema the
+          browser used, not a hand-written check;
+        - no secret, private key, installation token or JWT fragment can reach a
+          response body, a log line, a commit message or the PR body;
+        - attacker-controlled text cannot break the generated PR Markdown or inject
+          a command;
+        - rate limiting keys on something a client cannot spoof, and fails closed;
+        - Turnstile is skipped only when no secret is configured, never per request.
+
+    - path: "src/lib/{github,ratelimit}.ts"
+      instructions: |
+        Security-critical. Never log, echo or commit the App private key,
+        installation token or JWT. Verify signature and token expiry handling.
+        Flag any in-memory cache that could outlive a token's validity, and any
+        rate-limit counter that a request header can reset.
+
+    - path: "src/{components,pages}/**/*.astro"
+      instructions: |
+        Static-first Astro with Tailwind v4 tokens. Review for:
+        - client JavaScript: every <script> or client:* needs a justification; the
+          homepage stays near 1 KB gzip and /contribute/* is the only route allowed
+          to ship zod;
+        - accessibility: semantic landmarks, exactly one h1, labelled controls,
+          visible focus, >=44px touch targets, prefers-reduced-motion honoured;
+        - design tokens only (bg-surface, text-ink, border-line, accent-*). Flag
+          raw hex or rgb values, gradients, backdrop-blur/glass, glows, and
+          uppercase tracked micro-labels. Light and dark are the only themes.
+
+    - path: "src/scripts/**"
+      instructions: |
+        Progressive enhancement. The form must degrade to something usable with
+        no JavaScript. No new runtime dependencies in this path.
+
+    - path: "scripts/**"
+      instructions: |
+        Node 22 built-ins only, no dependencies. A check script must exit non-zero
+        when it finds something that would ship a false or unsourced claim.
+
+    - path: ".github/workflows/**"
+      instructions: |
+        Least-privilege permissions. Flag pull_request_target combined with
+        checkout of untrusted code, secrets reachable from fork pull requests,
+        and action references that are not pinned.
+
+    - path: "wrangler.json"
+      instructions: |
+        Bindings and non-secret configuration only. Flag any literal secret; those
+        belong behind `wrangler secret put`. The RATE_LIMIT KV binding must match
+        what src/lib/ratelimit.ts expects, and its absence must degrade loudly.
+
+  # ---------------------------------------------------------------------------
+  # Triggers
+  # ---------------------------------------------------------------------------
+  auto_review:
+    enabled: true
+    drafts: false
+    auto_incremental_review: true
+    auto_pause_after_reviewed_commits: 5
+    ignore_title_keywords:
+      - "WIP"
+      - "DO NOT MERGE"
+      - "chore(release)"
+    ignore_usernames:
+      - "dependabot[bot]"
+      - "renovate[bot]"
+
+  slop_detection:
+    enabled: true
+    # Public submissions are the point of this repo. This catches the ones that
+    # are machine-generated noise rather than a person reporting their own law.
+    # No label applied: never publicly brand a contributor as a spammer.
+
+  # ---------------------------------------------------------------------------
+  # Nothing here is allowed to approve. A human reads the statute.
+  # ---------------------------------------------------------------------------
+  auto_approvals:
+    enabled: false
+    allow_author_approval: false   # a submitter cannot ask the bot to approve their own PR
+
+  # ---------------------------------------------------------------------------
+  # Every check stays at `warning` on purpose. Blocking (`error`) requires the
+  # request-changes workflow, which in the v2 schema is only a deprecated alias of
+  # auto_approvals.enabled — and enabling that would let CodeRabbit approve PRs,
+  # which is the one thing this repository must never delegate.
+  # ---------------------------------------------------------------------------
+  pre_merge_checks:
+    override_requested_reviewers_only: true   # contributors cannot dismiss a failing check
+    docstrings:
+      mode: "off"                 # no docstring convention in this codebase
+    title:
+      mode: "warning"
+      requirements: "Under 72 characters, sentence case. Content PRs should name the jurisdiction."
+    description:
+      mode: "off"                 # the repo already has a PR template and it is good
+    issue_assessment:
+      mode: "off"
+    custom_checks:
+      - name: "Maintainer-only fields"
+        mode: "warning"
+        instructions: |
+          Changes under src/content/jurisdictions/** should not alter `verification`,
+          `verifiedAt`, `updatedAt`, `helplines`, `name`, `parent` or `region`
+          unless the PR description explains that a maintainer did so deliberately.
+          These fields are server-controlled on the public submission path.
+          Warn, never fail: a maintainer PR legitimately touches them.
+      - name: "New dependency justified"
+        mode: "warning"
+        instructions: |
+          If package.json gains a runtime dependency, the PR description must say
+          what it replaces or why it cannot be written in-repo. This project ships
+          nothing beyond Astro, Tailwind and zod, and keeps the homepage client
+          bundle near 1 KB. Warn when a dependency appears without justification.
+
+  # ---------------------------------------------------------------------------
+  # Linters. Everything not listed here has no matching files in this repo and
+  # is left at its default; only the actively wrong ones are disabled.
+  # ---------------------------------------------------------------------------
+  tools:
+    languagetool:
+      enabled: false     # editorial voice is deliberate; a grammar bot fights it
+    presidio:
+      enabled: false     # src/data/helplines.json is full of crisis numbers on purpose
+    opengrep:
+      enabled: false     # redundant with semgrep
+    semgrep:
+      enabled: true
+    ast-grep:
+      enabled: true
+    gitleaks:
+      enabled: true      # the Worker holds App credentials; a leak here is fatal
+    trufflehog:
+      enabled: true
+    osvScanner:
+      enabled: true      # the correct tool for the lockfile excluded above
+    actionlint:
+      enabled: true
+    zizmor:
+      enabled: true      # workflow security
+    markdownlint:
+      enabled: true
+    yamllint:
+      enabled: true
+    eslint:
+      enabled: true
+      e18e:
+        enabled: false   # do not push dependency swaps at a deliberately pinned stack
+
+  finishing_touches:
+    docstrings:
+      enabled: false
+    unit_tests:
+      enabled: false     # no test framework exists; offering it is noise
+    fix_ci:
+      enabled: false     # no bot pushes commits to a contributor's branch here
+    resolve_merge_conflict:
+      enabled: false
+    # autofix left enabled: small mechanical fixes on request are fine
+
+chat:
+  art: false
+  auto_reply: false              # require a mention; quieter on community PRs
+  allow_non_org_members: false   # randoms cannot burn your tokens
+
+knowledge_base:
+  learnings:
+    scope: local
+  issues:
+    scope: local
+  pull_requests:
+    scope: local
+  web_search:
+    enabled: true                # helps with Astro 7 / Tailwind 4 / zod 4 APIs
+  code_guidelines:
+    enabled: true
+    filePatterns:
+      - "CONTRIBUTING.md"
+  mcp:
+    usage: disabled
+  jira:
+    usage: disabled
+  linear:
+    usage: disabled
+
+issue_enrichment:
+  auto_enrich:
+    enabled: false
+  planning:
+    enabled: false               # a one-person project does not need auto-planned issues
+  labeling:
+    auto_apply_labels: false
+    labeling_instructions:
+      - label: "content"
+        instructions: "Concerns jurisdiction records or helplines."
+      - label: "infra"
+        instructions: "Concerns wrangler.json, the submission Worker, or GitHub Actions."
+      - label: "accessibility"
+        instructions: "Concerns focus, contrast, labels, keyboard or screen-reader behaviour."
+      - label: "i18n"
+        instructions: "Adds user-facing strings that will need French translation."
