@@ -4,7 +4,7 @@
 	"parent": null,
 	"region": "Americas",
 	"verification": "verified",
-	"updatedAt": "2026-11-01",
+	"updatedAt": "2026-11-02",
 	"helplines": [
 		{
 			"name": "Trans Lifeline",
@@ -16,6 +16,7 @@
 		"decriminalization": {
 			"status": "protected",
 			"summary": "Sex between people of the same sex was decriminalised in 1969 by the Criminal Law Amendment Act. The same age of consent — 16 — now applies to everyone.",
+			"since": "1969",
 			"sources": [
 				{
 					"label": "Criminal Code, s. 150.1 (age of consent)",
@@ -28,12 +29,12 @@
 					"kind": "government"
 				}
 			],
-			"since": "1969",
 			"verifiedAt": "2026-11-01"
 		},
 		"marriage": {
 			"status": "protected",
 			"summary": "Marriage for civil purposes is the lawful union of two persons, under the Civil Marriage Act 2005. Religious officials may refuse to perform a marriage that conflicts with their beliefs.",
+			"since": "2005",
 			"sources": [
 				{
 					"label": "Civil Marriage Act, S.C. 2005, c. 33",
@@ -41,12 +42,12 @@
 					"kind": "primary-law"
 				}
 			],
-			"since": "2005",
 			"verifiedAt": "2026-11-01"
 		},
 		"genderRecognition": {
 			"status": "partial",
 			"summary": "Gender identity and gender expression are protected grounds under the Canadian Human Rights Act since 2017. Federal documents such as passports allow an X marker, but birth certificates are issued by provinces and territories, so the process varies by where you live.",
+			"since": "2017",
 			"sources": [
 				{
 					"label": "Canadian Human Rights Act",
@@ -59,12 +60,12 @@
 					"kind": "government"
 				}
 			],
-			"since": "2017",
 			"verifiedAt": "2026-11-01"
 		},
 		"conversionTherapy": {
 			"status": "protected",
 			"summary": "Conversion practices are a criminal offence under s. 320.1 of the Criminal Code, added in 2022. The offence also covers advertising them, profiting from them, and taking a child out of Canada for them.",
+			"since": "2022",
 			"sources": [
 				{
 					"label": "Criminal Code, s. 320.1 (conversion therapy)",
@@ -72,12 +73,11 @@
 					"kind": "primary-law"
 				}
 			],
-			"since": "2022",
 			"verifiedAt": "2026-11-01"
 		},
 		"asylum": {
 			"status": "partial",
-			"summary": "Claims can be based on sexual orientation or gender identity as membership of a particular social group under s. 96 of the Immigration and Refugee Protection Act. The Immigration and Refugee Board has a guideline on handling these cases.",
+			"summary": "Claims can be based on sexual orientation or gender identity as membership of a particular social group under s. 96 of the Immigration and Refugee Protection Act. The Immigration and Refugee Board has a guideline on handling these cases. testt",
 			"sources": [
 				{
 					"label": "Immigration and Refugee Protection Act, s. 96",
@@ -89,8 +89,7 @@
 					"url": "https://irb.gc.ca/en/legal-policy/policies/Pages/GuideDir09.aspx",
 					"kind": "government"
 				}
-			],
-			"verifiedAt": "2026-11-01"
+			]
 		}
 	}
 }
