@@ -216,8 +216,26 @@ const helplines = FEATURED_HELPLINES;
 				</span>
 			</div>
 
-			<ul class="grid grid-cols-1 gap-4 text-xs sm:grid-cols-2 md:grid-cols-4">
-				{helplines.map((h) => <HelplineCard {...h} />)}
+			{/* Shown client-side when the detected country has no local helpline yet. */}
+			<div
+				id="helpline-warning"
+				class="mb-4 hidden rounded-xl border border-warn-line bg-warn-soft p-3 text-xs leading-relaxed text-warn"
+				role="status"
+			>
+				<strong class="font-bold">
+					no helpline listed for <span id="helpline-warning-country">your country</span> yet.
+				</strong>
+				the worldwide and global resources below still work anywhere.
+			</div>
+
+			{/*
+				Country-specific helplines are rendered but hidden until a location is
+				detected, so no-JS visitors still get the worldwide fallback.
+			*/}
+			<ul id="helpline-list" class="grid grid-cols-1 gap-4 text-xs sm:grid-cols-2 md:grid-cols-4">
+				{helplines.map((h) => (
+					<HelplineCard {...h} hidden={h.scope === "country"} />
+				))}
 			</ul>
 		</Card>
 	</section>

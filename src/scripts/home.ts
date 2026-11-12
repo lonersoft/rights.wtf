@@ -92,7 +92,70 @@ if (mobileMenu) {
 	});
 }
 
-// 4. Client-side Geo IP Country Detection
+// 4. Helplines: show entries that match the detected country or region.
+// Country entries start hidden in the markup; global entries are the fallback
+// used only when no location is detected or no local helpline exists.
+const helplineList = document.getElementById("helpline-list");
+const helplineWarning = document.getElementById("helpline-warning");
+const helplineWarningCountry = document.getElementById("helpline-warning-country");
+
+function normaliseRegion(value: string): string {
+	return value
+		.toLowerCase()
+		.normalize("NFD")
+		.replace(/[\u0300-\u036f]/g, "")
+		.trim();
+}
+
+function renderHelplines(code: string | null, regionName: string) {
+	if (!helplineList) return;
+
+	const cards = Array.from(helplineList.querySelectorAll<HTMLElement>("[data-scope]"));
+	const country = code?.toLowerCase() ?? "";
+	const region = normaliseRegion(regionName);
+	let hasLocal = false;
+
+	for (const card of cards) {
+		if (card.dataset.scope !== "country") continue;
+
+		const countries = (card.dataset.countries ?? "")
+			.split(",")
+			.map((value) => value.trim().toLowerCase())
+			.filter(Boolean);
+		const regions = (card.dataset.regions ?? "")
+			.split(",")
+			.map(normaliseRegion)
+			.filter(Boolean);
+
+		const matchesCountry = country !== "" && countries.includes(country);
+		const matchesRegion = region !== "" && regions.includes(region);
+		const show = matchesCountry || matchesRegion;
+
+		card.hidden = !show;
+		if (show) hasLocal = true;
+	}
+
+	// Global entries only appear as a fallback.
+	for (const card of cards) {
+		if (card.dataset.scope === "country") continue;
+		card.hidden = hasLocal;
+	}
+
+	if (!helplineWarning) return;
+
+	const showWarning = code !== null && !hasLocal;
+	helplineWarning.classList.toggle("hidden", !showWarning);
+
+	if (showWarning && helplineWarningCountry && code) {
+		let countryName = code.toUpperCase();
+		try {
+			countryName = new Intl.DisplayNames(["en"], { type: "region" }).of(code) || countryName;
+		} catch {}
+		helplineWarningCountry.textContent = countryName;
+	}
+}
+
+// 5. Client-side Geo IP Country Detection
 async function detectCountry() {
 	const targetEl = document.getElementById("user-geo-country");
 	if (!targetEl) return;
@@ -141,9 +204,11 @@ async function detectCountry() {
 		} catch {}
 		const regionSuffix = regionName ? ` · ${regionName}` : "";
 		targetEl.innerHTML = `<span class="text-ink font-bold">${countryName}${regionSuffix}</span>`;
+		renderHelplines(code, regionName);
 		return;
 	}
 
+	renderHelplines(null, "");
 	targetEl.textContent = "Worldwide (location unavailable)";
 }
 

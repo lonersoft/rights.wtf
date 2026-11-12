@@ -9,12 +9,37 @@ interface Props {
 	note?: string;
 	url?: string;
 	linkLabel?: string;
+	/** "global" is always shown; "country" is filtered by detected location. */
+	scope?: "global" | "country";
+	/** ISO 3166-1 alpha-2 country codes this helpline covers. */
+	countries?: string[];
+	/** Optional sub-national region names this helpline covers. */
+	regions?: string[];
+	/** Server-side initial visibility. */
+	hidden?: boolean;
 }
 
-const { title, name, contact, note, url, linkLabel = "visit site" } = Astro.props;
+const {
+	title,
+	name,
+	contact,
+	note,
+	url,
+	linkLabel = "visit site",
+	scope,
+	countries,
+	regions,
+	hidden = false,
+} = Astro.props;
 ---
 
-<li class="space-y-1.5 rounded-xl border border-line bg-accent-soft/20 p-4">
+<li
+	class="space-y-1.5 rounded-xl border border-line bg-accent-soft/20 p-4"
+	data-scope={scope}
+	data-countries={countries?.join(",")}
+	data-regions={regions?.join(",")}
+	hidden={hidden || undefined}
+>
 	{title && <div class="text-xs font-bold text-ink">{title}</div>}
 	<div class="text-sm font-semibold text-accent-strong">{name}</div>
 	{contact && <div class="text-sm text-accent-strong">{contact}</div>}

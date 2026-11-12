@@ -5,7 +5,8 @@
 		"name": "findahelpline.com",
 		"note": "Free confidential support in 130+ countries by chat, text, or call.",
 		"url": "https://findahelpline.com",
-		"linkLabel": "visit site"
+		"linkLabel": "visit site",
+		"scope": "global"
 	},
 	{
 		"id": "trevor-project",
@@ -14,7 +15,9 @@
 		"contact": "866-488-7386 or text START to 678-678",
 		"note": "24/7 crisis and peer support run by trans folks and LGBTQ+ advocates.",
 		"url": "https://www.thetrevorproject.org",
-		"linkLabel": "thetrevorproject.org"
+		"linkLabel": "thetrevorproject.org",
+		"scope": "country",
+		"countries": ["us", "ca"]
 	},
 	{
 		"id": "sos-homophobie",
@@ -23,7 +26,9 @@
 		"contact": "01 48 06 42 41",
 		"note": "Écoute anonyme et hébergement d'urgence pour jeunes LGBTQ+.",
 		"url": "https://www.sos-homophobie.org",
-		"linkLabel": "sos-homophobie.org"
+		"linkLabel": "sos-homophobie.org",
+		"scope": "country",
+		"countries": ["fr"]
 	},
 	{
 		"id": "switchboard-uk",
@@ -32,6 +37,8 @@
 		"contact": "0800 0119 100",
 		"note": "Daily 10am to 10pm. A safe, non-judgmental space to discuss anything.",
 		"url": "https://switchboard.lgbt",
-		"linkLabel": "switchboard.lgbt"
+		"linkLabel": "switchboard.lgbt",
+		"scope": "country",
+		"countries": ["gb"]
 	}
 ]
