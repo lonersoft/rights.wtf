@@ -23,10 +23,10 @@ import Button from "./Button.astro";
 		</a>
 
 		<nav class="hidden md:flex items-center gap-6 text-sm font-medium text-ink" aria-label="Main navigation">
-			<a href="/#helplines" class="transition-opacity hover:opacity-60">helplines</a>
+			<a href="/helplines" class="transition-opacity hover:opacity-60">helplines</a>
 			<a href="/countries" class="transition-opacity hover:opacity-60">country info</a>
-			<a href="/#guide" class="transition-opacity hover:opacity-60">guide</a>
-			<a href="/#about" class="transition-opacity hover:opacity-60">about</a>
+			<a href="/guide" class="transition-opacity hover:opacity-60">guide</a>
+			<a href="/about" class="transition-opacity hover:opacity-60">about</a>
 		</nav>
 
 		<div class="flex shrink-0 items-center gap-2">
@@ -55,7 +55,7 @@ import Button from "./Button.astro";
 				title="Quick exit to Google (Esc 3x also works)"
 				aria-label="Quick exit to Google"
 			>
-				Quick exit
+				quick exit
 				<svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
 					<path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
 				</svg>
@@ -66,9 +66,8 @@ import Button from "./Button.astro";
 				target="_blank"
 				rel="noopener noreferrer"
 				variant="primary"
-				shape="pill"
-				size="md"
-				class="max-sm:hidden"
+				size="xs"
+				class="max-sm:hidden sm:px-3 sm:text-sm"
 				aria-label="Donate to Loners can Make Software"
 			>
 				donate
@@ -85,10 +84,10 @@ import Button from "./Button.astro";
 				</summary>
 				<div class="absolute right-0 top-full mt-2 w-60 rounded-xl border border-line bg-surface p-4 shadow-lg shadow-ink/5">
 					<nav class="flex flex-col gap-1 text-sm font-medium text-ink">
-						<a href="/#helplines" class="rounded-lg px-2 py-2 hover:bg-accent-soft hover:text-accent">helplines</a>
+						<a href="/helplines" class="rounded-lg px-2 py-2 hover:bg-accent-soft hover:text-accent">helplines</a>
 						<a href="/countries" class="rounded-lg px-2 py-2 hover:bg-accent-soft hover:text-accent">country info</a>
-						<a href="/#guide" class="rounded-lg px-2 py-2 hover:bg-accent-soft hover:text-accent">guide</a>
-						<a href="/#about" class="rounded-lg px-2 py-2 hover:bg-accent-soft hover:text-accent">about</a>
+						<a href="/guide" class="rounded-lg px-2 py-2 hover:bg-accent-soft hover:text-accent">guide</a>
+						<a href="/about" class="rounded-lg px-2 py-2 hover:bg-accent-soft hover:text-accent">about</a>
 					</nav>
 					<div class="mt-2 flex items-center justify-between border-t border-line pt-3">
 						<a
@@ -104,7 +103,6 @@ import Button from "./Button.astro";
 							target="_blank"
 							rel="noopener noreferrer"
 							variant="primary"
-							shape="pill"
 							size="xs"
 						>
 							donate

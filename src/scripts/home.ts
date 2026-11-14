@@ -7,6 +7,7 @@
  */
 import { COVERAGE, STATUS_STYLE, coverageBadgeClass, type TopicStatus } from "../lib/status";
 import type { Coverage } from "../lib/jurisdictions";
+import { countryLabel, detectLocation, filterCountryCards, type Location } from "./geo";
 
 type Preview = {
 	code: string;
@@ -99,59 +100,25 @@ const helplineList = document.getElementById("helpline-list");
 const helplineWarning = document.getElementById("helpline-warning");
 const helplineWarningCountry = document.getElementById("helpline-warning-country");
 
-function normaliseRegion(value: string): string {
-	return value
-		.toLowerCase()
-		.normalize("NFD")
-		.replace(/[\u0300-\u036f]/g, "")
-		.trim();
-}
-
-function renderHelplines(code: string | null, regionName: string) {
+function renderHelplines(location: Location) {
 	if (!helplineList) return;
 
-	const cards = Array.from(helplineList.querySelectorAll<HTMLElement>("[data-scope]"));
-	const country = code?.toLowerCase() ?? "";
-	const region = normaliseRegion(regionName);
-	let hasLocal = false;
-
-	for (const card of cards) {
-		if (card.dataset.scope !== "country") continue;
-
-		const countries = (card.dataset.countries ?? "")
-			.split(",")
-			.map((value) => value.trim().toLowerCase())
-			.filter(Boolean);
-		const regions = (card.dataset.regions ?? "")
-			.split(",")
-			.map(normaliseRegion)
-			.filter(Boolean);
-
-		const matchesCountry = country !== "" && countries.includes(country);
-		const matchesRegion = region !== "" && regions.includes(region);
-		const show = matchesCountry || matchesRegion;
-
-		card.hidden = !show;
-		if (show) hasLocal = true;
-	}
+	const { hasLocal } = filterCountryCards(helplineList, location);
 
 	// Global entries only appear as a fallback.
-	for (const card of cards) {
-		if (card.dataset.scope === "country") continue;
+	for (const card of helplineList.querySelectorAll<HTMLElement>(
+		'[data-scope]:not([data-scope="country"])',
+	)) {
 		card.hidden = hasLocal;
 	}
 
 	if (!helplineWarning) return;
 
-	const showWarning = code !== null && !hasLocal;
+	const showWarning = location.country !== null && !hasLocal;
 	helplineWarning.classList.toggle("hidden", !showWarning);
 
-	if (showWarning && helplineWarningCountry && code) {
-		let countryName = code.toUpperCase();
-		try {
-			countryName = new Intl.DisplayNames(["en"], { type: "region" }).of(code) || countryName;
-		} catch {}
-		helplineWarningCountry.textContent = countryName;
+	if (showWarning && helplineWarningCountry && location.country) {
+		helplineWarningCountry.textContent = countryLabel(location.country);
 	}
 }
 
@@ -160,56 +127,16 @@ async function detectCountry() {
 	const targetEl = document.getElementById("user-geo-country");
 	if (!targetEl) return;
 
-	let code = "";
-	let regionName = "";
+	const location = await detectLocation();
 
-	try {
-		const res = await fetch("https://ipinfo.io/json");
-		if (res.ok) {
-			const data = (await res.json()) as { country?: string; region?: string; city?: string };
-			if (data.country) {
-				code = data.country;
-				if (data.region && data.region !== data.city) {
-					regionName = data.region;
-				}
-			}
-		}
-	} catch {}
-
-	if (!code) {
-		try {
-			const res = await fetch("https://api.country.is");
-			if (res.ok) {
-				const data = (await res.json()) as { country?: string };
-				if (data.country) code = data.country;
-			}
-		} catch {}
+	if (location.country) {
+		const regionSuffix = location.region ? ` · ${location.region}` : "";
+		targetEl.innerHTML = `<span class="text-ink font-bold">${countryLabel(location.country)}${regionSuffix}</span>`;
+	} else {
+		targetEl.textContent = "Worldwide (location is unavailable)";
 	}
 
-	if (!code) {
-		try {
-			const res = await fetch("/api/geo.json");
-			if (res.ok) {
-				const json = (await res.json()) as { country?: string };
-				if (json.country && json.country !== "XX") code = json.country;
-			}
-		} catch {}
-	}
-
-	if (code) {
-		let countryName = code;
-		try {
-			const displayNames = new Intl.DisplayNames(["en"], { type: "region" });
-			countryName = displayNames.of(code) || code;
-		} catch {}
-		const regionSuffix = regionName ? ` · ${regionName}` : "";
-		targetEl.innerHTML = `<span class="text-ink font-bold">${countryName}${regionSuffix}</span>`;
-		renderHelplines(code, regionName);
-		return;
-	}
-
-	renderHelplines(null, "");
-	targetEl.textContent = "Worldwide (location unavailable)";
+	renderHelplines(location);
 }
 
 detectCountry();

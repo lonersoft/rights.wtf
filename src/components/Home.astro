@@ -66,11 +66,11 @@ const helplines = FEATURED_HELPLINES;
 					<h2 class="text-lg font-bold text-ink">quick! give me informations!!</h2>
 				</div>
 				<p class="mb-4 text-xs leading-relaxed text-ink-muted">
-					Find your legal protections, transition rules, and safety reality right where you live.
+					find your legal protections, transition rules, and safety reality right where you live.
 				</p>
 
-				<Select id="country-selector" label="Select your country or region:">
-					<optgroup label="Countries">
+				<Select id="country-selector" label="select your country or region:">
+					<optgroup label="countries">
 						{countries.map((e) => (
 							<option value={e.data.code} selected={e === countries[0]}>{e.data.name}</option>
 						))}
@@ -105,7 +105,7 @@ const helplines = FEATURED_HELPLINES;
 
 			<div class="mt-5 pt-2 text-center">
 				<a href="/countries" class="text-xs font-semibold text-accent hover:text-accent-strong hover:underline">
-					(or browse every jurisdiction &rarr;)
+					or browse every jurisdiction &rarr;
 				</a>
 			</div>
 		</Card>
@@ -137,7 +137,7 @@ const helplines = FEATURED_HELPLINES;
 			</div>
 
 			<div class="mt-5 pt-2">
-				<a href="https://github.com/lonersoft/rights.wtf#why-this-exists" target="_blank" rel="noopener noreferrer" class="flex items-center justify-between text-xs font-semibold text-ink-muted hover:text-accent">
+				<a href="/about" class="flex items-center justify-between text-xs font-semibold text-ink-muted hover:text-accent">
 					<span>read our story and method</span>
 					<span aria-hidden="true">&rarr;</span>
 				</a>
@@ -179,7 +179,7 @@ const helplines = FEATURED_HELPLINES;
 			</div>
 
 			<div class="mt-5 pt-2">
-				<a href="https://github.com/lonersoft/rights.wtf#what-we-cover" target="_blank" rel="noopener noreferrer" class="flex items-center justify-between text-xs font-semibold text-accent hover:text-accent-strong">
+				<a href="/guide" class="flex items-center justify-between text-xs font-semibold text-accent hover:text-accent-strong">
 					<span>explore queer field guide</span>
 					<span aria-hidden="true">&rarr;</span>
 				</a>
@@ -224,7 +224,7 @@ const helplines = FEATURED_HELPLINES;
 			>
 				<strong class="font-bold">
 					no helpline listed for <span id="helpline-warning-country">your country</span> yet.
-				</strong>
+				</strong>{" "}
 				the worldwide and global resources below still work anywhere.
 			</div>
 

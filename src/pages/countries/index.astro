@@ -35,9 +35,9 @@ const counts = {
 
 		<h1 class="mt-4 text-3xl font-extrabold tracking-tight sm:text-4xl">country info</h1>
 		<p class="mt-2 max-w-2xl text-sm leading-relaxed text-ink-muted">
-			Every jurisdiction gets a page. Some are checked against primary law, some are imported
+			every jurisdiction gets a page. some are checked against primary law, some are imported
 			from monitors, and most are still blank on purpose — we would rather say
-			<span class="font-semibold text-ink">"not verified yet"</span> than guess.
+			<span class="font-semibold text-ink"> "not verified yet"</span> than guess.
 		</p>
 
 		<div class="mt-5 flex flex-wrap gap-2 text-[11px] font-semibold">
@@ -100,15 +100,15 @@ const counts = {
 		<!-- Desktop Only Right Pane: Featured Verified Guides -->
 		<div class="hidden lg:block mt-8 space-y-6">
 			<div class="rounded-2xl border border-line bg-accent-soft/30 p-5">
-				<h2 class="text-sm font-bold text-ink">← Select any jurisdiction from the atlas</h2>
+				<h2 class="text-sm font-bold text-ink">← select any jurisdiction from the atlas</h2>
 				<p class="mt-1 text-xs text-ink-muted">
-					Browse the persistent sidebar on the left or search across all 285 countries to view their full legal field guide.
+					browse the persistent sidebar on the left or search across all 285 countries to view their full legal field guide.
 				</p>
 			</div>
 
 			<div>
-				<h2 class="text-base font-bold text-ink">Checked against primary law ({counts.verified})</h2>
-				<p class="mt-1 text-xs text-ink-faint">Each of these has been verified against official statutes, court decisions, and decrees.</p>
+				<h2 class="text-base font-bold text-ink">checked against primary law ({counts.verified})</h2>
+				<p class="mt-1 text-xs text-ink-faint">each of these has been verified against official statutes, court decisions, and decrees.</p>
 				<div class="mt-3 grid grid-cols-2 gap-3">
 					{all.filter(j => j.coverage === "verified").map(v => (
 						<a

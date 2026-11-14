@@ -1,0 +1,121 @@
+[
+	{
+		"id": "ilga-world",
+		"title": "Worldwide / Global",
+		"name": "ILGA World",
+		"note": "Global federation of LGBTQ+ organisations, with member groups in 170+ countries.",
+		"url": "https://ilga.org",
+		"linkLabel": "ilga.org",
+		"scope": "global"
+	},
+	{
+		"id": "outright",
+		"title": "Worldwide / Global",
+		"name": "OutRight Action International",
+		"note": "Research, advocacy, and emergency support for LGBTQ+ people worldwide.",
+		"url": "https://outrightinternational.org",
+		"linkLabel": "outrightinternational.org",
+		"scope": "global"
+	},
+	{
+		"id": "inter-lgbt",
+		"title": "France",
+		"name": "Inter-LGBT",
+		"note": "French national network coordinating LGBTQ+ associations, Pride events, and advocacy.",
+		"url": "https://inter-lgbt.org",
+		"linkLabel": "inter-lgbt.org",
+		"scope": "country",
+		"countries": ["fr"]
+	},
+	{
+		"id": "fransgenre",
+		"title": "France",
+		"name": "FransGenre",
+		"note": "French national trans and gender-diverse community organisation and advocacy network.",
+		"url": "https://www.fransgenre.fr/en_GB",
+		"linkLabel": "fransgenre.fr",
+		"scope": "country",
+		"countries": ["fr"]
+	},
+	{
+		"id": "bicause",
+		"title": "France",
+		"name": "Bi'Cause",
+		"note": "National bi and pan community association: meetups, support, and rights advocacy.",
+		"url": "https://bicause.fr",
+		"linkLabel": "bicause.fr",
+		"scope": "country",
+		"countries": ["fr"]
+	},
+	{
+		"id": "centre-lgbt-paris",
+		"title": "France · Île-de-France",
+		"name": "Centre LGBTQI+ de Paris et d'Île-de-France",
+		"note": "Community centre with listening services, support groups, and practical help in Paris.",
+		"url": "https://www.centrelgbtparis.org",
+		"linkLabel": "centrelgbtparis.org",
+		"scope": "country",
+		"countries": ["fr"],
+		"regions": ["Île-de-France"]
+	},
+	{
+		"id": "stonewall-uk",
+		"title": "United Kingdom",
+		"name": "Stonewall",
+		"note": "UK-wide LGBTQ+ rights charity with community resources and workplace support.",
+		"url": "https://www.stonewall.org.uk",
+		"linkLabel": "stonewall.org.uk",
+		"scope": "country",
+		"countries": ["gb"]
+	},
+	{
+		"id": "mermaids-uk",
+		"title": "United Kingdom",
+		"name": "Mermaids",
+		"note": "Support for trans, non-binary, and gender-diverse young people and their families.",
+		"url": "https://mermaidsuk.org.uk",
+		"linkLabel": "mermaidsuk.org.uk",
+		"scope": "country",
+		"countries": ["gb"]
+	},
+	{
+		"id": "ncte-us",
+		"title": "United States",
+		"name": "National Center for Transgender Equality",
+		"note": "US policy advocacy and practical resources for trans people and their families.",
+		"url": "https://transequality.org",
+		"linkLabel": "transequality.org",
+		"scope": "country",
+		"countries": ["us"]
+	},
+	{
+		"id": "glaad-us",
+		"title": "United States",
+		"name": "GLAAD",
+		"note": "Media advocacy, community resources, and ways to get involved across the US.",
+		"url": "https://glaad.org",
+		"linkLabel": "glaad.org",
+		"scope": "country",
+		"countries": ["us"]
+	},
+	{
+		"id": "lsvd-de",
+		"title": "Germany",
+		"name": "LSVD",
+		"note": "Germany's largest LGBTQ+ association: counselling, community groups, and advocacy.",
+		"url": "https://www.lsvd.de",
+		"linkLabel": "lsvd.de",
+		"scope": "country",
+		"countries": ["de"]
+	},
+	{
+		"id": "bundesverband-trans-de",
+		"title": "Germany",
+		"name": "Bundesverband Trans*",
+		"note": "National trans advocacy and community network with regional member groups.",
+		"url": "https://www.bundesverband-trans.de",
+		"linkLabel": "bundesverband-trans.de",
+		"scope": "country",
+		"countries": ["de"]
+	}
+]

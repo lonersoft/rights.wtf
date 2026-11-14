@@ -15,6 +15,9 @@ export default defineConfig({
 	integrations: [sitemap()],
 	vite: {
 		plugins: [tailwindcss()],
+		server: {
+			allowedHosts: ["dev.loc.lolodotzip.me"],
+		},
 	},
 	adapter: cloudflare(),
 });
